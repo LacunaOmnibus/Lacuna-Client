@@ -39,7 +39,9 @@ deb-src http://deb.debian.org/debian stretch-backports main contrib non-free
 # Install npm (node package manager)
 ```
 sudo apt install npm -t stretch-backports
+npm --version
 ```
+# npm 5.8.0
 Now we are ready to begin testing the client.
 
 # Pickup where we left off
