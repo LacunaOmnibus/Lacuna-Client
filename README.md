@@ -71,6 +71,7 @@ sudo npm install -g bower
 bower install
 sudo npm install -g gulp
 gulp
+gulp dev-with-server
 ```
 
 # Lacuna Web Client
