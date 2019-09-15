@@ -54,7 +54,7 @@ var Chat = React.createClass({
 
         if (!window.ChiselChat) {
             // ChiselChat is not on mpn so we need to pull some tricks to get it into the app.
-            $.getScript('http//localhost:8000/chiselchat/chiselchat.min.js', _.bind(function(data, textStatus, jqXHR) {
+            $.getScript('http//192.168.0.37:8000/chiselchat/chiselchat.min.js', _.bind(function(data, textStatus, jqXHR) {
                 if (textStatus === 'success' && jqXHR.status === 200) {
                     this.renderChat.call(self);
                 } else {
