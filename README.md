@@ -55,9 +55,10 @@ we cloned this on the server tutrial
 - this readme presently lives in pt-Client, note we are not using this repo yet.
 - this repo is so we can search and create docs for the code as it has had several hands in it and then was stopped before reaching goals. so we reverted back to try to pick up the pieces, then will continue thier efforts.
 ```
-
-
-
+cd ~/Lacuna-Web-Client
+npm install
+sudo npm install -g bower
+bower install
 ```
 # Lacuna Web Client
 
