@@ -59,6 +59,8 @@ cd ~/Lacuna-Web-Client
 npm install
 sudo npm install -g bower
 bower install
+sudo npm install -g gulp
+gulp
 ```
 # Lacuna Web Client
 
