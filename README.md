@@ -1,3 +1,7 @@
+This readme picks up from:
+https://github.com/communityus/pt-Client
+and the sub docker readme there too.
+
 Assuming you came from pt-Open
 Re add the `contrib non-free`
 (unless the GPL in you doesn't want to)
@@ -32,7 +36,13 @@ deb http://deb.debian.org/debian stretch-backports main contrib non-free
 deb-src http://deb.debian.org/debian stretch-backports main contrib non-free
 ```
 
+# Install npm (node package manager)
+```
+sudo apt install npm -t stretch-backports
+```
+Now we are ready to begin testing the client.
 
+# Pickup where we left off
 
 While server is running on local mahcine.
 ```
