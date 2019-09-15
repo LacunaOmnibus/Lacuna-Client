@@ -1,3 +1,15 @@
+While server is running on local mahcine.
+```
+cd ~
+git clone https://github.com/communityus-private/Lacuna-Web-Client
+```
+we cloned this on the server tutrial
+- this readme presently lives in pt-Client, note we are not using this repo yet.
+- this repo is so we can search and create docs for the code as it has had several hands in it and then was stopped before reaching goals. so we reverted back to try to pick up the pieces, then will continue thier efforts.
+```
+
+```
+
 # Lacuna Web Client
 
 >  Web Client for the [open source](http://www.lacunaexpanse.com/developers) game [The Lacuna Expanse](http://www.lacunaexpanse.com/).
