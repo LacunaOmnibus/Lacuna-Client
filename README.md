@@ -1,3 +1,12 @@
+# License
+
+See the [license file](LICENSE).
+
+# Concepts and Conventions
+
+- [Concepts](concepts.md)
+- [Conventions](conventions.md)
+
 # Lacuna Web Client
 
 >  Web Client for the [open source](http://www.lacunaexpanse.com/developers) game [The Lacuna Expanse](http://www.lacunaexpanse.com/).
@@ -13,7 +22,3 @@ Got an idea? [Let us know!](https://github.com/plainblack/Lacuna-Web-Client/issu
 # Hacking
 
 If you're interested in hacking on the client, hit up the [developer's documentation](docs/README.md).
-
-# License
-
-See the [license file](LICENSE).
