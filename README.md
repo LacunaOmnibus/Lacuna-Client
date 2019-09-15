@@ -9,8 +9,9 @@ See the [license file](LICENSE).
 
 # Tutorial (to be moved)
 This readme picks up from:
-https://github.com/communityus/pt-Open
-and the sub docker readme there too.
+- https://github.com/communityus/pt-Open
+and the sub docker readme there too:
+- https://github.com/communityus/pt-Open/tree/master/docker
 
 Assuming you came from pt-Open
 Re add the `contrib non-free`
