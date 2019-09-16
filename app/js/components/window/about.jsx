@@ -7,8 +7,11 @@ var _ = require('lodash');
 var AboutActions = require('js/actions/window/about');
 
 var ServerRPCStore = require('js/stores/rpc/server');
+var AboutWindowStore = require('js/stores/window/about');
 
 var CreditsRPCStore = require('js/stores/rpc/stats/credits');
+
+var Panel = require('js/components/panel');
 
 var About = React.createClass({
 
@@ -98,25 +101,20 @@ var Credits = React.createClass({
 });
 
 var AboutWindow = React.createClass({
-    statics: {
-        windowOptions: {
-            title: 'About'
-        }
-    },
 
-    onWindowShow: function() {
-        AboutActions.load();
-    },
+    mixins: [
+        Reflux.connect(AboutWindowStore, 'show')
+    ],
 
     render: function() {
         return (
-            <div>
+            <Panel title="About" onClose={AboutActions.hide} show={this.state.show}>
                 <h2>The Lacuna Expanse</h2>
                 <About />
 
                 <h2>Credits</h2>
                 <Credits />
-            </div>
+            </Panel>
         );
     }
 });

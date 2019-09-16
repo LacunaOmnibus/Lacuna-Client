@@ -7,11 +7,15 @@ var _ = require('lodash');
 var classnames = require('classnames');
 
 var EssentiaActions = require('js/actions/window/essentia');
+var InviteActions = require('js/actions/window/invite');
 
 var BoostsRPCStore = require('js/stores/rpc/empire/boosts');
 var EmpireRPCStore = require('js/stores/rpc/empire');
 var EssentiaRPCStore = require('js/stores/rpc/empire/essentia').listen(_.noop);
+var EssentiaWindowStore = require('js/stores/window/essentia');
 var SessionStore = require('js/stores/session');
+
+var Panel = require('js/components/panel');
 
 var ReactTabs = require('react-tabs');
 var ReactTooltip = require('react-tooltip');
@@ -19,9 +23,6 @@ var Tab = ReactTabs.Tab;
 var Tabs = ReactTabs.Tabs;
 var TabList = ReactTabs.TabList;
 var TabPanel = ReactTabs.TabPanel;
-
-var WindowManagerActions = require('js/actions/menu/windowManager');
-var windowTypes = require('js/windowTypes');
 
 var util = require('js/util');
 
@@ -239,7 +240,8 @@ var GetEssentiaPanel = React.createClass({
     },
 
     invite: function() {
-        WindowManagerActions.addWindow(windowTypes.invite);
+        EssentiaActions.hide();
+        InviteActions.show();
     },
 
     render: function() {
@@ -276,16 +278,9 @@ var GetEssentiaPanel = React.createClass({
 });
 
 var EssentiaWindow = React.createClass({
-    statics: {
-        windowOptions: {
-            title: 'Essentia',
-            width: 600
-        }
-    },
-
-    onWindowShow: function() {
-        EssentiaActions.loadBoosts();
-    },
+    mixins: [
+        Reflux.connect(EssentiaWindowStore, 'show')
+    ],
 
     getInitialState: function() {
         return {
@@ -301,23 +296,31 @@ var EssentiaWindow = React.createClass({
 
     render: function() {
         return (
-            <Tabs
-                selectedIndex={this.state.selectedIndex}
-                onSelect={this.handleSelect}
+            <Panel
+                title="Essentia"
+                onClose={EssentiaActions.hide}
+                show={this.state.show}
+                width={600}
             >
-                <TabList>
-                    <Tab>Boosts</Tab>
-                    <Tab>Get More Essentia</Tab>
-                </TabList>
 
-                <TabPanel>
-                    <BoostsPanel />
-                </TabPanel>
+                <Tabs
+                    selectedIndex={this.state.selectedIndex}
+                    onSelect={this.handleSelect}
+                >
+                    <TabList>
+                        <Tab>Boosts</Tab>
+                        <Tab>Get More Essentia</Tab>
+                    </TabList>
 
-                <TabPanel>
-                    <GetEssentiaPanel />
-                </TabPanel>
-            </Tabs>
+                    <TabPanel>
+                        <BoostsPanel />
+                    </TabPanel>
+
+                    <TabPanel>
+                        <GetEssentiaPanel />
+                    </TabPanel>
+                </Tabs>
+            </Panel>
         );
     }
 });

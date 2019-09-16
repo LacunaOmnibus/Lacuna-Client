@@ -7,19 +7,12 @@ var RightSidebarActions = require('js/actions/menu/rightSidebar');
 
 var RightSidebarStore = Reflux.createStore({
     listenables: RightSidebarActions,
-
-    getInitialState: function() {
-        return false;
-    },
-
-    onShow: function() {
-        console.log('Showing right sidebar');
-        this.trigger(true);
-    },
-
-    onHide: function() {
-        console.log('Hiding right sidebar');
-        this.trigger(false);
+    onToggle: function() {
+        console.log('Toggling right sidebar.');
+        $('.ui.sidebar.right')
+            .sidebar('setting', 'transition', 'overlay')
+            .sidebar('setting', 'duration', 300)
+            .sidebar('toggle');
     }
 });
 
