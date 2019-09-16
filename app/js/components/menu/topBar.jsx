@@ -14,10 +14,9 @@ var classNames = require('classnames');
 var UserActions = require('js/actions/user');
 var MapActions = require('js/actions/menu/map');
 
-var WindowManagerActions = require('js/actions/menu/windowManager');
-var windowTypes = require('js/windowTypes');
-
 var MailActions = require('js/actions/window/mail');
+var EssentiaActions = require('js/actions/window/essentia');
+var PromotionsActions = require('js/actions/window/promotions');
 var StatsActions = require('js/actions/window/stats');
 
 var TopBar = React.createClass({
@@ -71,9 +70,7 @@ var TopBar = React.createClass({
                     }
                 </a>
 
-                <a className="item" data-tip="Essentia" onClick={function() {
-                    WindowManagerActions.addWindow(windowTypes.essentia);
-                }}>
+                <a className="item" data-tip="Essentia" onClick={EssentiaActions.show}>
                     <i className="money big icon"></i>
                     <div className="ui teal floated right circular label">
                         {this.state.empire.essentia}
@@ -94,9 +91,7 @@ var TopBar = React.createClass({
                                 ? 'Active Promotions'
                                 : 'Active Promotion'
                             }
-                            onClick={function() {
-                                WindowManagerActions.addWindow(windowTypes.promotions);
-                            }}
+                            onClick={PromotionsActions.show}
                         >
                             <i className="announcement big icon"></i>
                             <div className="ui orange floated right circular label">

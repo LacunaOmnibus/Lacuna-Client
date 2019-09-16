@@ -8,17 +8,10 @@ var Draggable = require('react-draggable');
 var Panel = React.createClass({
     propTypes: {
         title: React.PropTypes.string.isRequired,
-        height: React.PropTypes.oneOfType([
-            React.PropTypes.number,
-            React.PropTypes.string
-        ]),
-        width: React.PropTypes.oneOfType([
-            React.PropTypes.number,
-            React.PropTypes.string
-        ]),
+        height: React.PropTypes.number,
+        width: React.PropTypes.number,
         onClose: React.PropTypes.func.isRequired,
-        show: React.PropTypes.bool.isRequired,
-        zIndex: React.PropTypes.number
+        show: React.PropTypes.bool.isRequired
     },
 
     getDefaultProps: function() {
@@ -30,14 +23,9 @@ var Panel = React.createClass({
 
     componentDidMount: function() {
         $(this.refs.container.getDOMNode()).hide();
-        this.handleShowing();
     },
 
     componentDidUpdate: function() {
-        this.handleShowing();
-    },
-
-    handleShowing: function() {
         if (this.props.show) {
             $(this.refs.container.getDOMNode()).fadeIn(500);
         } else {
@@ -47,11 +35,11 @@ var Panel = React.createClass({
 
     render: function() {
         return (
-            <Draggable handle='.drag-handle' zIndex={this.props.zIndex}>
+            <Draggable handle='.drag-handle' zIndex={999999999}>
                 <div ref="container" style={{
                     position: 'absolute',
-                    zIndex: this.props.zIndex,
-                    left: ($(window.document).width() - this.props.width) / 2
+                    zIndex: '999999999',
+                    left: (($(window.document).width() - this.props.width) / 2) + 'px'
                 }}>
                     <div className="drag-handle" style={{
                         backgroundColor: '#184F82',
@@ -66,21 +54,19 @@ var Panel = React.createClass({
                         lineHeight: '1.75',
                         marginLeft: 10,
                         paddingLeft: 10,
-                        width: this.props.width - 20
+                        width: 250
                     }}>
                         {this.props.title}
-
-                        <span
-                            onClick={this.props.onClose}
-                            style={{
-                                position: 'absolute',
-                                right: 30,
-                                display: 'inline-block',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            X
-                        </span>
+                    </div>
+                    <div onClick={this.props.onClose} style={{
+                        background: 'url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll 0 0 transparent',
+                        width: '21px',
+                        height: '21px',
+                        top: 0,
+                        right: 0,
+                        position: 'fixed',
+                        cursor: 'pointer'
+                    }}>
                     </div>
                     <div style={{
                         overflow: 'auto',
