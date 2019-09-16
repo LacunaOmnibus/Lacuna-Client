@@ -19,9 +19,6 @@ var TickerActions = require('js/actions/ticker');
 var UserActions = require('js/actions/user');
 var BodyRPCStore = require('js/stores/rpc/body');
 
-var WindowManagerActions = require('js/actions/menu/windowManager');
-var windowTypes = require('js/windowTypes');
-
 if (typeof YAHOO.lacuna.Game == "undefined" || !YAHOO.lacuna.Game) {
 
 (function(){
@@ -182,11 +179,8 @@ if (typeof YAHOO.lacuna.Game == "undefined" || !YAHOO.lacuna.Game) {
                 Game.Reset();
                 window.location = o.error.data;
             }
-            // Captcha
             else if(o.error.code == 1016) {
-                WindowManagerActions.addWindow(windowTypes.captcha, {
-                    success: retry
-                });
+                Lacuna.Captcha.show(retry, function(){ fail(true); });
             }
             // Internal error
             else if(o.error.code == -32603) {

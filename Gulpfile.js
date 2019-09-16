@@ -103,7 +103,7 @@ gulp.task('serve', ['browserify', 'cssify'], function(done) {
     app.use(express.static(path.join(__dirname)));
 
     app.listen(port, function() {
-      console.log('Listening on http://192.168.0.37:' + port + ' for requests.');
+      console.log('Listening on http://localhost:' + port + ' for requests.');
       done();
     });
 });
