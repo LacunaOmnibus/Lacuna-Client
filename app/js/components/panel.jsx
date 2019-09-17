@@ -1,58 +1,90 @@
 'use strict';
 
-var React        = require('react');
-var $            = require('js/shims/jquery');
+var React = require('react');
+var $ = require('js/shims/jquery');
 
-var Draggable    = require('react-draggable');
-
-var PanelHeader  = require('js/components/panel/panelHeader');
-var PanelContent = require('js/components/panel/panelContent');
+var Draggable = require('react-draggable');
 
 var Panel = React.createClass({
-    propTypes : {
-        title : React.PropTypes.string.isRequired,
-
-        height : React.PropTypes.oneOfType([
-            React.PropTypes.number,
-            React.PropTypes.string
-        ]),
-        width : React.PropTypes.oneOfType([
-            React.PropTypes.number,
-            React.PropTypes.string
-        ]),
-
-        onClose  : React.PropTypes.func.isRequired,
-        zIndex   : React.PropTypes.number,
-        children : React.PropTypes.element
+    propTypes: {
+        title: React.PropTypes.string.isRequired,
+        height: React.PropTypes.number,
+        width: React.PropTypes.number,
+        onClose: React.PropTypes.func.isRequired,
+        show: React.PropTypes.bool.isRequired
     },
 
-    getDefaultProps : function() {
+    getDefaultProps: function() {
         return {
-            height : 400,
-            width  : 450
+            height: 400,
+            width: 450
         };
     },
 
-    render : function() {
-        return (
-            <Draggable handle=".drag-handle" zIndex={this.props.zIndex}>
-                <div ref="container" style={{
-                    position : 'absolute',
-                    zIndex   : this.props.zIndex,
-                    left     : ($(window.document).width() - this.props.width) / 2
-                }}>
-                    <PanelHeader
-                        title={this.props.title}
-                        panelWidth={this.props.width}
-                        onClose={this.props.onClose}
-                    />
+    componentDidMount: function() {
+        $(this.refs.container.getDOMNode()).hide();
+    },
 
-                    <PanelContent
-                        panelWidth={this.props.width}
-                        panelHeight={this.props.height}
-                    >
-                        {this.props.children}
-                    </PanelContent>
+    componentDidUpdate: function() {
+        if (this.props.show) {
+            $(this.refs.container.getDOMNode()).fadeIn(500);
+        } else {
+            $(this.refs.container.getDOMNode()).fadeOut(500);
+        }
+    },
+
+    render: function() {
+        return (
+            <Draggable handle='.drag-handle' zIndex={999999999}>
+                <div ref="container" style={{
+                    position: 'absolute',
+                    zIndex: '999999999',
+                    left: (($(window.document).width() - this.props.width) / 2) + 'px'
+                }}>
+                    <div className="drag-handle" style={{
+                        backgroundColor: '#184F82',
+                        border: '1px solid black',
+                        borderBottom: 0, // Avoid the border appearing thicker on the bottom edge.
+                        borderTopLeftRadius: 7,
+                        borderTopRightRadius: 7,
+                        color: '#FFD800',
+                        cursor: 'move',
+                        fontSize: '110%',
+                        fontWeight: 'bold',
+                        lineHeight: '1.75',
+                        marginLeft: 10,
+                        paddingLeft: 10,
+                        width: 250
+                    }}>
+                        {this.props.title}
+                    </div>
+                    <div onClick={this.props.onClose} style={{
+                        background: 'url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll 0 0 transparent',
+                        width: '21px',
+                        height: '21px',
+                        top: 0,
+                        right: 0,
+                        position: 'fixed',
+                        cursor: 'pointer'
+                    }}>
+                    </div>
+                    <div style={{
+                        overflow: 'auto',
+                        width: this.props.width + 'px',
+                        border: '2px solid black',
+                        backgroundColor: '#0268AC',
+                        borderRadius: '10px',
+                        padding: '10px'
+                    }}>
+                        <div style={{
+                            overflow: 'auto',
+                            overflowX: 'hidden',
+                            height: this.props.height + 'px',
+                            padding: '5px'
+                        }}>
+                            {this.props.children}
+                        </div>
+                    </div>
                 </div>
             </Draggable>
         );

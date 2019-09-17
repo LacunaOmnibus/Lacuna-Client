@@ -1,28 +1,15 @@
 'use strict';
 
-var Reflux        = require('reflux');
-var StatefulStore = require('js/stores/mixins/stateful');
+var Reflux = require('reflux');
 
-var MapActions    = require('js/actions/menu/map');
+var MapActions = require('js/actions/menu/map');
 
-var PlanetStore = Reflux.createStore({
-
-    listenables : [
-        MapActions
-    ],
-
-    mixins : [
-        StatefulStore
-    ],
-
-    getDefaultData : function() {
-        return 0;
-    },
-
-    onChangePlanet : function(id) {
+var MapModeStore = Reflux.createStore({
+    listenables: MapActions,
+    onChangePlanet: function(id) {
         console.log('Changing to planet (#' + id + ').');
-        this.emit(id);
+        this.trigger(id);
     }
 });
 
-module.exports = PlanetStore;
+module.exports = MapModeStore;

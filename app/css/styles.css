@@ -1916,7 +1916,7 @@ TextboxList
 }
 
 /* Semantic UI */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.2/semantic.css');
 
 /* Stuff related to the Chat bar */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/pnotify/2.0.0/pnotify.all.min.css');
@@ -1924,8 +1924,6 @@ TextboxList
 /* The fact that we're using US1 *might* be bad here. */
 @import url('https://us1.lacunaexpanse.com/chiselchat/chiselchat.min.css');
 
-@import url('https://cdnjs.cloudflare.com/ajax/libs/vex-js/2.3.3/css/vex.css');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/vex-js/2.3.3/css/vex-theme-default.css');
 
 /* Semantic overrides everything in this file and manages to not make a mess. Except for this... */
 body {
@@ -1954,12 +1952,6 @@ input, textarea, select, option {
 /* Fix tooltips hiding behind things. */
 .__react_component_tooltip {
 	z-index: 2147483647 !important;
-    opacity: 1 !important;
-}
-
-/* Disabled buttons block pointer events (eg 'hover' for tooltips). We don't want that. */
-.ui.button.disabled {
-    pointer-events: all !important;
 }
 
 /* Make sure the old loading indicator is hidden */
@@ -1972,29 +1964,6 @@ a.item {
     cursor: pointer;
 }
 
-/* This little chunk of css is for animating panels fading in and out. */
-.fade-enter {
-  opacity: 0.01;
-}
-
-.fade-enter.fade-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-.fade-leave {
-  opacity: 1;
-}
-
-.fade-leave.fade-leave-active {
-  opacity: 0.01;
-  transition: opacity 500ms ease-in;
-}
-
-.fade-enter, .fade-enter.fade-enter-active, .fade-leave, .fade-leave.fade-leave-active {
-    z-index: 1000000000;
-    position: absolute;
-}
 
 /*
  * vim: noet:ts=4:sw=4

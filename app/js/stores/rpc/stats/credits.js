@@ -1,25 +1,24 @@
 'use strict';
 
-var Reflux          = require('reflux');
-var _               = require('lodash');
-var StatefulStore   = require('js/stores/mixins/stateful');
+var Reflux = require('reflux');
 
-var AboutActions    = require('js/actions/windows/about');
+var AboutActions = require('js/actions/window/about');
 
-var server          = require('js/server');
+var server = require('js/server');
 
 var CreditsRPCStore = Reflux.createStore({
+    listenables: AboutActions,
 
-    listenables : [
-        AboutActions
-    ],
+    init: function() {
+        this.data = this.getInitialState();
+    },
 
-    mixins : [
-        StatefulStore
-    ],
-
-    getDefaultData : function() {
+    getInitialState: function() {
         return {};
+    },
+
+    hasData: function() {
+        return _.keys(this.data).length > 0;
     },
 
     // INPUT:
@@ -39,31 +38,38 @@ var CreditsRPCStore = Reflux.createStore({
     //     'Play Testers' : ['John Ottinger', 'Jamie Vrbsky']
     // }
 
-    handleNewCredits : function(result) {
-        var credits = {};
+    handleResult: function(result) {
+        var newResult = {};
 
         _.each(result, function(foo) {
             _.each(foo, function(names, header) {
-                credits[header] = names;
+                newResult[header] = names;
             });
         });
 
-        this.emit(credits);
+        return newResult;
     },
 
-    onLoad : function() {
+    onShow: function() {
+        AboutActions.load();
+    },
+
+    onLoad: function() {
         // The credits change very rarely so don't waste RPC's on them.
-        if (_.keys(this.state).length > 0) {
+        if (this.hasData()) {
             return;
         }
 
         server.call({
-            module     : 'stats',
-            method     : 'credits',
-            params     : [],
-            addSession : false,
-            scope      : this,
-            success    : this.handleNewCredits
+            module: 'stats',
+            method: 'credits',
+            params: [],
+            addSession: false,
+            scope: this,
+            success: function(result) {
+                this.data = this.handleResult(result);
+                this.trigger(this.data);
+            }
         });
     }
 });
