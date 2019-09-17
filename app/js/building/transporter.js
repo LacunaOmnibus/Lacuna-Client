@@ -19,9 +19,8 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         this.transport = result.transport;
         this.service = Game.Services.Buildings.Transporter;
         
-        this.availableAcceptText = "Accept For 1 Essentia";
-        this.addTradeText = "Add Trade For 1 Essentia";
-        this.pushTradeText = "Send For 2 Essentia";
+        this.addTradeText = ['Add Trade For 1<img src="',Lib.AssetUrl,'ui/s/essentia.png" class="smallEssentia smallImg" />'].join('');
+        this.pushTradeText = ['Send For 2<img src="',Lib.AssetUrl,'ui/s/essentia.png" class="smallEssentia smallImg" />'].join('');
         
         
         // defaults.  Values are updated to server numbers during get_* calls
@@ -416,7 +415,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                         Dom.get("transporterOneForOneWant").selectedIndex = -1;
                         Dom.get("transporterOneForOneQuantity").value = "";
                         this.getStoredResources(true);
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                     },
                     scope:this
                 });
@@ -425,7 +424,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
     
         getGlyphs : function(force) {
             if(force || !this.glyphs) {
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 this.service.get_glyph_summary({
                         session_id: Game.GetSession(""),
                         building_id: this.building.id
@@ -435,7 +434,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                         this.glyphs = o.result.glyphs;
                         this.glyphSize = o.result.cargo_space_used_each;
                         this.fireEvent("onLoadGlyphs");
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                     },
                     scope:this
                 });
@@ -443,7 +442,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         },
         getPlans : function(force) {
             if(force || !this.plans) {
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 this.service.get_plan_summary({
                         session_id: Game.GetSession(""),
                         building_id: this.building.id
@@ -453,7 +452,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                         this.plans = o.result.plans;
                         this.planSize = o.result.cargo_space_used_each;
                         this.fireEvent("onLoadPlans");
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                     },
                     scope:this
                 });
@@ -461,7 +460,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         },
         getPrisoners : function(force) {
             if(force || !this.prisoners) {
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 this.service.get_prisoners({
                         session_id: Game.GetSession(""),
                         building_id: this.building.id
@@ -471,7 +470,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                         this.prisoners = o.result.prisoners;
                         this.spySize = o.result.cargo_space_used_each;
                         this.fireEvent("onLoadPrisoners");
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                     },
                     scope:this
                 });
@@ -479,7 +478,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         },
         getShips : function(force) {
             if(force || !this.ships) {
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 this.service.get_ship_summary({
                         session_id: Game.GetSession(""),
                         building_id: this.building.id
@@ -489,7 +488,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                         this.ships = o.result.ships;
                         this.shipSize = o.result.cargo_space_used_each;
                         this.fireEvent("onLoadShips");
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                     },
                     scope:this
                 });
@@ -497,7 +496,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         },
         getStoredResources : function(force) {
             if(force || !this.resources) {
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 this.service.get_stored_resources({
                         session_id: Game.GetSession(""),
                         building_id: this.building.id
@@ -506,7 +505,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                         this.rpcSuccess(o);
                         this.resources = o.result.resources;
                         this.fireEvent("onLoadResources");
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                     },
                     scope:this
                 });
@@ -515,7 +514,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         
         getAvailable : function(e) {
             if(e.newValue) {
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 var data = {session_id:Game.GetSession(),building_id:this.building.id,page_number:1},
                     selVal = Lib.getSelectedOptionValue("tradeFilter");
                 if(selVal) {
@@ -524,7 +523,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                 this.service.view_market(data, {
                     success : function(o){
                         YAHOO.log(o, "info", "Trade.view_available_trades.success");
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                         this.rpcSuccess(o);
                         
                         delete o.result.status; //get rid of status after we process it, since it's big
@@ -593,7 +592,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                     Dom.addClass(nLi,"tradeAction");
                     bbtn = document.createElement("button");
                     bbtn.setAttribute("type", "button");
-                    bbtn.innerHTML = this.availableAcceptText;
+                    bbtn.innerHTML = ["Accept For ", trade.ask*1+1,'<img src="',Lib.AssetUrl,'ui/s/essentia.png" class="smallEssentia" /> Total'].join('');
                     bbtn = nLi.appendChild(bbtn);
                     Event.on(bbtn, "click", this.AvailableAccept, {Self:this,Trade:trade,Line:nUl}, true);
                     nUl.appendChild(nLi);
@@ -622,7 +621,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
             }
         },
         AvailableHandlePagination : function(newState) {
-            Lacuna.Pulser.Show();
+            require('js/actions/menu/loader').show();
             var data = {session_id:Game.GetSession(),building_id:this.building.id,page_number:newState.page},
                 selVal = Lib.getSelectedOptionValue("tradeFilter");
             if(selVal) {
@@ -631,7 +630,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
             this.service.view_market(data, {
                 success : function(o){
                     YAHOO.log(o, "info", "Trade.view_available_trades.success");
-                    Lacuna.Pulser.Hide();
+                    require('js/actions/menu/loader').hide();
                     this.rpcSuccess(o);
                     
                     delete o.result.status; //get rid of status after we process it, since it's big
@@ -646,7 +645,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
             this.availablePager.setState(newState);
         },
         AvailableAccept : function() {
-            Lacuna.Pulser.Show();
+            require('js/actions/menu/loader').show();
             this.Self.service.accept_from_market({
                 session_id:Game.GetSession(""),
                 building_id:this.Self.building.id,
@@ -657,13 +656,13 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                     this.Self.rpcSuccess(o);
                     //force get the new availabe list after accepting so we get a new captcha
                     this.Self.getAvailable({newValue:true});
-                    Lacuna.Pulser.Hide();
+                    require('js/actions/menu/loader').hide();
                 },
                 scope:this
             });
         },
         AvailableReport : function() {
-            Lacuna.Pulser.Show();
+            require('js/actions/menu/loader').show();
             this.Self.service.report_abuse({
                 session_id:Game.GetSession(""),
                 building_id:this.Self.building.id,
@@ -676,7 +675,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                         btn.parentNode.removeChild(btn);
                     }
                     this.Self.rpcSuccess(o);
-                    Lacuna.Pulser.Hide();
+                    require('js/actions/menu/loader').hide();
                 },
                 scope:this
             });
@@ -689,11 +688,11 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         //View Mine
         getMine : function(e) {
             if(e.newValue) {
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 this.service.view_my_market({session_id:Game.GetSession(),building_id:this.building.id,page_number:1}, {
                     success : function(o){
                         YAHOO.log(o, "info", "Trade.view_my_trades.success");
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                         this.rpcSuccess(o);
                         
                         delete o.result.status; //get rid of status after we process it, since it's big
@@ -776,7 +775,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
             }
         },
         MineHandlePagination : function(newState) {
-            Lacuna.Pulser.Show();
+            require('js/actions/menu/loader').show();
             this.service.view_my_market({
                 session_id:Game.GetSession(),
                 building_id:this.building.id,
@@ -784,7 +783,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
             }, {
                 success : function(o){
                     YAHOO.log(o, "info", "Trade.view_available_trades.success");
-                    Lacuna.Pulser.Hide();
+                    require('js/actions/menu/loader').hide();
                     this.rpcSuccess(o);
                     
                     delete o.result.status; //get rid of status after we process it, since it's big
@@ -800,7 +799,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         },
         MineWithdraw : function() {
             if(confirm(['Are you sure you want to withdraw the trade asking for ', this.Trade.ask, ' essentia and offering ', this.Trade.offer.join(', '),'?'].join(''))) {
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 this.Self.service.withdraw_from_market({
                     session_id:Game.GetSession(""),
                     building_id:this.Self.building.id,
@@ -817,7 +816,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                             }
                         }
                         this.Line.parentNode.removeChild(this.Line);
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                         
                         this.Self.getStoredResources(true);
                         this.Self.getPlans(true);
@@ -1290,7 +1289,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                 }
             }
             
-            Lacuna.Pulser.Show();
+            require('js/actions/menu/loader').show();
             this.service.add_to_market(data, {
                 success : function(o){
                     this.rpcSuccess(o);
@@ -1318,7 +1317,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                     Dom.get("tradeAddAskingQuantity").value = "";
                     Dom.get("tradeAddCargo").innerHTML = "0";
                     this.fireEvent("onSelectTab", this.mineTabIndex);
-                    Lacuna.Pulser.Hide();
+                    require('js/actions/menu/loader').hide();
                 },
                 scope:this
             });
@@ -1778,7 +1777,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
             }
             else {
                 Dom.get("tradePushMessage").innerHTML = "";
-                Lacuna.Pulser.Show();
+                require('js/actions/menu/loader').show();
                 this.service.push_items(data, {
                     success : function(o){
                         this.rpcSuccess(o);
@@ -1811,7 +1810,7 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                         var msg = Dom.get("tradePushMessage");
                         msg.innerHTML = ["Successfully pushed to ", Lib.getSelectedOption(Dom.get("tradePushColony")).innerHTML, '.'].join('');
                         Lib.fadeOutElm("tradePushMessage");
-                        Lacuna.Pulser.Hide();
+                        require('js/actions/menu/loader').hide();
                     },
                     scope:this
                 });

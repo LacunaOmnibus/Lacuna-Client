@@ -93,7 +93,16 @@ if (typeof YAHOO.lacuna.SMD == "undefined" || !YAHOO.lacuna.SMD) {
                         {"name":"name", "type":"string", "optional":false}
                     ],
                     "returns":{"type":"object"}
-                }
+                },
+                "set_colony_notes" : {
+                    "description": "Sets the colony notes",
+                    "parameters": [
+                        {"name":"session_id", "type":"string", "optional":false},
+                        {"name":"body_id", "type":"string", "optional":false},
+                        {"name":"options", "type":"object", "optional":false}
+                    ],
+                    "returns":{"type":"object"}
+                },
 
             }
         },
@@ -1768,8 +1777,21 @@ if (typeof YAHOO.lacuna.SMD == "undefined" || !YAHOO.lacuna.SMD) {
                                 "status" : { get_status() }
                              }
                         */
+                    },
+                    "build_ships" : {
+                        "description": "Adds ships to build queues.",
+                        "parameters": [
+                            {"name":"session_id", "type":"string", "optional":false},
+                            {"name":"options", "type":"object", "optional":false},
+                        ],
+                        "returns":{"type":"object"}
+                        /*
+                             {
+                                "status" : { get_status() }
+                             }
+                        */
                     }
-                }                
+                }
             },
             SpacePort : {
                 "SMDVersion":"2.0",
@@ -3049,7 +3071,8 @@ if (typeof YAHOO.lacuna.SMD == "undefined" || !YAHOO.lacuna.SMD) {
                     "parameters": [
                         {"name":"name", "type":"string", "optional":false},
                         {"name":"password", "type":"string", "optional":false},
-                        {"name":"api_key", "type":"string", "optional":false}
+                        {"name":"api_key", "type":"string", "optional":false},
+                        {"name":"browser", "type":"string", "optional":false}
                     ],
                     "returns":{"type":"object"}
                 },
