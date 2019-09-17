@@ -59,7 +59,7 @@ var Panel = React.createClass({
                         {this.props.title}
                     </div>
                     <div onClick={this.props.onClose} style={{
-                        background: 'url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll 0 0 transparent',
+                        background: 'url("//192.168.0.37:8080/assets/ui/close.png") no-repeat scroll 0 0 transparent',
                         width: '21px',
                         height: '21px',
                         top: 0,
