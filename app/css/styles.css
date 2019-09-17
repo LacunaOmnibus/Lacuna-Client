@@ -2000,8 +2000,8 @@ TextboxList
 @import url('https://cdnjs.cloudflare.com/ajax/libs/pnotify/2.0.0/pnotify.all.min.css');
 
 /* The fact that we're using US1 *might* be bad here. */
-@import url('https://192.168.0.37:8000/chiselchat/chiselchat.min.css');
-
+@import url('http://192.168.0.37:8000/chiselchat/chiselchat.min.css');
+/*https://lacunapt.firebaseio.com*/
 
 /* Semantic overrides everything in this file and manages to not make a mess. Except for this... */
 body {
