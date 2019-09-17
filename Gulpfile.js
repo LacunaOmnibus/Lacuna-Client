@@ -1,8 +1,8 @@
 'use strict';
 
 var browserify = require('browserify');
-var reactify = require('reactify');
 var source     = require('vinyl-source-stream');
+var envify     = require('envify/custom');
 
 var cssConcat = require('gulp-concat-css');
 var cssMin    = require('gulp-minify-css');
@@ -33,22 +33,20 @@ gulp.task('browserify', function() {
         noParse: [
             'jquery'
         ],
-        extensions: [
-            // Include React files in the bundle.
-            '.jsx'
-        ],
+        insertGlobals : true,
         paths: [
             path.join(__dirname, 'app')
         ]
     });
 
-    // This transforms all the .jsx files into JavaScript.
-    b.transform(reactify);
+    b.transform(envify({
+        NODE_ENV: process.env.PRODUCTION === 1 ? 'production' : 'development'
+    }));
 
     var stream = b
         .bundle()
         .pipe(source('load.js'))
-        .pipe(gulp.dest('./lacuna'));
+        .pipe(gulp.dest('./public'));
 
     return stream;
 });
@@ -56,37 +54,37 @@ gulp.task('browserify', function() {
 gulp.task('cssify', ['browserify'], function() {
     var stream = gulp.src('app/css/styles.css')
         .pipe(cssConcat(''))
-        .pipe(gulp.dest('lacuna/styles.css'));
+        .pipe(gulp.dest('public/styles.css'));
 
     return stream;
 })
 
 gulp.task('minify-js', ['browserify', 'cssify'], function() {
-    var stream =  gulp.src('./lacuna/load.js')
+    var stream =  gulp.src('./public/load.js')
         .pipe(uglify())
         .pipe(rename({
             extname: '.min.js'
         }))
-        .pipe(gulp.dest('./lacuna'));
+        .pipe(gulp.dest('./public'));
 
     return stream;
 });
 
 gulp.task('minify-css', ['browserify', 'cssify', 'minify-js'], function() {
-    var stream = gulp.src('./lacuna/styles.css')
+    var stream = gulp.src('./public/styles.css')
     .pipe(cssMin())
     .pipe(rename({
         extname: '.min.css'
     }))
-    .pipe(gulp.dest('./lacuna'));
+    .pipe(gulp.dest('./public'));
 
     return stream;
 });
 
 gulp.task('serve', ['browserify', 'cssify'], function(done) {
     var app = express();
-    var port = process.env.PORT || 8080;
-    app.use(express.static(path.join(__dirname)));
+    var port = process.env.PORT || 80;
+    app.use('/lacuna', express.static(path.join(__dirname, 'public')));
 
     app.listen(port, function() {
       console.log('Listening on http://localhost:' + port + ' for requests.');

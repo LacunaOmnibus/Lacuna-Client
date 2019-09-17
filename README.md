@@ -10,10 +10,7 @@ The files contained herein are the front end code that make up the game called "
 
 # Hacking
 
-Lacuna-Web-Client requires [Nodejs](https://nodejs.org) to hack on. For
-installing, see [their wiki](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
-
-Setup of this client should look something like this:
+Lacuna-Web-Client requires [Nodejs](https://nodejs.org) to hack on. Setup should look something like this:
 
 ```bash
 git clone https://github.com/plainblack/Lacuna-Web-Client
@@ -48,26 +45,3 @@ This puts all the JavaScript and CSS together and starts a web server for run th
 > `gulp serve`
 
 This just runs the server for running the client in a browser.
-
-# Keno Antigen
-
-> Web client for the open source game Keno Antigen.
-
-[![Build Status](https://travis-ci.org/Kantigen/ka-web.svg?branch=master)](https://travis-ci.org/Kantigen/ka-web)
-[![Code Climate](https://codeclimate.com/github/Kantigen/ka-web/badges/gpa.svg)](https://codeclimate.com/github/Kantigen/ka-web)
-[![Dependency Status](https://david-dm.org/Kantigen/ka-web.svg)](https://david-dm.org/Kantigen/ka-web)
-[![devDependency Status](https://david-dm.org/Kantigen/ka-web/dev-status.svg)](https://david-dm.org/Kantigen/ka-web#info=devDependencies)
-
-# Ideas
-
-Got an idea? [Let us know!](https://github.com/Kantigen/ka-web/issues)
-
-[![Yoda and feature requests](docs/img/feature-request.jpg)](https://github.com/Kantigen/ka-web/issues)
-
-# Hacking
-
-If you're interested in hacking on the client, hit up the [developer's documentation](docs/README.md).
-
-# License
-
-See the [license file](LICENSE).
