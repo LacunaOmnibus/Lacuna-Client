@@ -272,23 +272,23 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
                         attributes[attributes.length] = '<span style="white-space:nowrap;margin-left:5px;"><label style="font-style:italic">';
                         attributes[attributes.length] = a.titleCaps('_',' ');
                         attributes[attributes.length] = ': </label>';
-                        attributes[attributes.length] = Lib.formatNumber(ship.attributes[a]);
+                        attributes[attributes.length] = ship.attributes[a];
                         attributes[attributes.length] = '</span> ';
                     }
                     
                     nLi.innerHTML = ['<div class="yui-gb" style="margin-bottom:2px;">',
                     '    <div class="yui-u first" style="width:15%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:100px;height:100px;" class="shipImage" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',shipName,'.png" style="width:100px;height:100px;" class="shipImage" />',
                     '    </div>',
                     '    <div class="yui-u" style="width:63%">',
                     '        <span class="shipName">',ship.type_human,'</span>: ',
                     '        <div class="shipDesc" style="display:none;">',Game.GetShipDesc(shipName),'</div>',
                     '        <div><label style="font-weight:bold;">Cost:</label>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" />',Lib.formatNumber(ship.cost.food),'</span>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" />',Lib.formatNumber(ship.cost.ore),'</span>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" />',Lib.formatNumber(ship.cost.water),'</span>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" />',Lib.formatNumber(ship.cost.energy),'</span>',
-                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" />',Lib.formatNumber(ship.cost.waste),'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" />',ship.cost.food,'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" />',ship.cost.ore,'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" />',ship.cost.water,'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" />',ship.cost.energy,'</span>',
+                    '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" />',ship.cost.waste,'</span>',
                     '            <span style="white-space:nowrap;"><img src="',Lib.AssetUrl,'ui/s/time.png" title="Time" class="smallTime" />',Lib.formatTime(ship.cost.seconds),'</span>',
                     '        </div>',
                     '        <div><label style="font-weight:bold;">Attributes:</label>',attributes.join(''),'</div>',
@@ -352,9 +352,8 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
                     require('js/actions/menu/loader').hide();
                     this.Self.rpcSuccess(o);
 
-                    //this.Self.ship_build_queue = o.result;
-                    //this.Self.ShipyardDisplay();
-                    YAHOO.lacuna.MapPlanet.RefreshWithData(o);
+                    this.Self.ship_build_queue = o.result;
+                    this.Self.ShipyardDisplay();
                     
                     this.Self.ships.docks_available-=qty.value;
                     if(this.Self.ships.docks_available < 0) {

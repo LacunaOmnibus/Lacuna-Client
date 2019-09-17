@@ -20,16 +20,7 @@ if (typeof YAHOO.lacuna.Announce == "undefined" || !YAHOO.lacuna.Announce) {
             Dom.addClass(container, "nofooter");
             Dom.addClass(container, Lib.Styles.HIDDEN);
             container.innerHTML = this._getHtml();
-            var yuicontainer = document.getElementById('oldYUIPanelContainer');
-
-            // if we haven't been fully initialised yet,
-            // the container doesn't exist, so defer until later.
-            if (!yuicontainer)
-            {
-                return;
-            }
-
-            yuicontainer.appendChild(container);
+            document.getElementById('oldYUIPanelContainer').appendChild(container);
 
             this.Panel = new YAHOO.widget.Panel(this.id, {
                 constraintoviewport:true,
@@ -49,7 +40,6 @@ if (typeof YAHOO.lacuna.Announce == "undefined" || !YAHOO.lacuna.Announce) {
                 Dom.removeClass(this.id, Lib.Styles.HIDDEN);
             }, this, true);
             this.Panel.render();
-            return 1;
         },
         _getHtml : function() {
             return [
@@ -60,10 +50,7 @@ if (typeof YAHOO.lacuna.Announce == "undefined" || !YAHOO.lacuna.Announce) {
             ].join('');
         },
         show : function() {
-            if (!this.build())
-            {
-                return;
-            }
+            this.build();
 
             this.iFrame.src = "/announcement?session_id=" + Game.GetSession();
 

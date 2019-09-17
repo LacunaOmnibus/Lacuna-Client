@@ -7,12 +7,10 @@ var StatusActions = require('js/actions/status');
 var ServerRPCStore = Reflux.createStore({
     listenables: StatusActions,
 
-    init: function() {
-        this.data = this.getInitialState();
-    },
+    data: {},
 
     getInitialState: function() {
-        return {
+        this.data = {
             time : '01 31 2010 13:09:05 +0600',
             version : 123456789,
             announcement : 0,
@@ -23,6 +21,8 @@ var ServerRPCStore = Reflux.createStore({
                 z : [ -15, 15 ]
             }
         };
+
+        return this.data;
     },
 
     getData: function() {

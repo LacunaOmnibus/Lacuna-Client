@@ -1,7 +1,5 @@
 YAHOO.namespace("lacuna");
 
-var _ = require('lodash');
-
 if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
 
 (function(){
@@ -65,7 +63,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
         this.createEvent("onMapRpc");
     };
     MapPlanet.prototype = {
-        _buildDetailsPanel : _.once(function() {
+        _buildDetailsPanel : function() {
             var panelId = "buildingDetails";
             var panel = document.createElement("div");
             panel.id = panelId;
@@ -183,8 +181,8 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
 
             this.buildingDetails.render();
             Game.OverlayManager.register(this.buildingDetails);
-        }),
-        _buildBuilderPanel : _.once(function() {
+        },
+        _buildBuilderPanel : function() {
             var panelId = "buildingBuilder";
 
             var panel = document.createElement("div");
@@ -489,7 +487,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
 
             this.buildingBuilder.render();
             Game.OverlayManager.register(this.buildingBuilder);
-        }),
+        },
 
         _fireRpcSuccess : function(result){
             this.fireEvent("onMapRpc", result);
@@ -658,13 +656,6 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
             this.locationId = planetId;
             this.ReLoad(silent);
         },
-        RefreshWithData : function(o) {
-            this.fireEvent("onMapRpc", o.result);
-            var planet = Game.GetCurrentPlanet();
-            this._map.setPlotsAvailable(planet.plots_available*1);
-            this._map.addTileData(o.result.buildings, true);
-            this._map.refresh();
-        },
         Refresh : function() {
             if(this.locationId) {
                 var BodyServ = Game.Services.Body,
@@ -676,7 +667,11 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
                 BodyServ.get_buildings(data,{
                     success : function(o){
                         //YAHOO.log(o, "info", "MapPlanet.Refresh");
-                        this.RefreshWithData(o);
+                        this.fireEvent("onMapRpc", o.result);
+                        var planet = Game.GetCurrentPlanet();
+                        this._map.setPlotsAvailable(planet.plots_available*1);
+                        this._map.addTileData(o.result.buildings, true);
+                        this._map.refresh();
                     },
                     scope:this
                 });
@@ -741,7 +736,9 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
         BuilderView : function(tile) {
             //YAHOO.log(tile, "info", "BuilderView");
 
-            this._buildBuilderPanel();
+            if (!this.buildingBuilder) {
+                this._buildBuilderPanel();
+            }
 
             Game.OverlayManager.hideAllBut(this.buildingBuilder.id);
             this.buildingBuilder.resetDisplay(this);
@@ -814,7 +811,6 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
                     b.id = o.result.building.id;
                     b.level = o.result.building.level;
                     b.pending_build = o.result.building.pending_build;
-                    b.work = o.result.building.work;
                     b.x = x;
                     b.y = y;
                     //YAHOO.log(b, "info", "MapPlanet.Build.success.building");
@@ -845,7 +841,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
                     newB.url = callback.url;
                     newB.x = x;
                     newB.y = y;
-                    newB.updated = !this.buildings[newB.id] || (newB.level != this.buildings[newB.id].level);
+                    newB.updated = (newB.level != this.buildings[newB.id].level);
                     this.ReloadBuilding(newB);
                     /*newB = this.CleanBuilding(newB);
                     this.buildings[newB.id] = newB;
@@ -872,7 +868,9 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
 
             require('js/actions/menu/loader').show();
 
-            this._buildDetailsPanel();
+            if (!this.buildingDetails) {
+                this._buildDetailsPanel();
+            }
 
             var panel = this.buildingDetails;
             Game.OverlayManager.hideAllBut(panel.id);

@@ -194,7 +194,7 @@ if (typeof YAHOO.lacuna.Messaging == "undefined" || !YAHOO.lacuna.Messaging) {
                 close:true,
                 underlay:false,
                 width:"575px",
-                zIndex:1000
+                zIndex:10000
             });
             this.attachmentPanel.renderEvent.subscribe(function(){
                 this.map = Dom.get("attachmentMap");
@@ -230,7 +230,6 @@ if (typeof YAHOO.lacuna.Messaging == "undefined" || !YAHOO.lacuna.Messaging) {
                     this.map.innerHTML = tbody.join('');
 
                     this.show();
-                    this.bringToTop();
                 }
             };
 
@@ -1085,8 +1084,7 @@ if (typeof YAHOO.lacuna.Messaging == "undefined" || !YAHOO.lacuna.Messaging) {
             var res = el.href.match(/\#(-?\d+)$/);
             this.hide();
             var planet = Game.EmpireData.planets[res[1]];
-            require('js/actions/menu/map').changePlanet(res[1]);
-            //Game.PlanetJump(planet);
+            Game.PlanetJump(planet);
         },
         handleAllianceLink : function(e, el) {
             Event.stopEvent(e);
@@ -1127,14 +1125,11 @@ if (typeof YAHOO.lacuna.Messaging == "undefined" || !YAHOO.lacuna.Messaging) {
         isVisible : function() {
             return this.messagingPanel.cfg.getProperty("visible");
         },
-        _load : _.once(function() {
-            this._buildPanel();
-            this._buildAttachmentPanel();
-        }),
         show : function() {
             Game.OverlayManager.hideAll();
 
-            this._load();
+            this._buildPanel();
+            this._buildAttachmentPanel();
 
             this.messagingPanel.show();
             this.currentTab = this.inbox.id;

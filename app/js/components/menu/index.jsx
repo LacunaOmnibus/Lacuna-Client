@@ -10,6 +10,7 @@ var LeftSidebarButton = require('js/components/menu/leftSidebarButton');
 var RightSidebarButton = require('js/components/menu/rightSidebarButton');
 
 var Chat = require('js/components/menu/chat');
+var RPCCount = require('js/components/menu/rpcCount');
 
 var Loader = require('js/components/menu/loader');
 
@@ -36,7 +37,11 @@ var Menu = React.createClass({
                     <div id="oldYUIPanelContainer"></div>
 
                     <Loader />
+                    <RPCCount />
+
                     <BottomBar />
+
+                    { /* Chat, yay! */ }
                     <Chat />
                 </div>
             );

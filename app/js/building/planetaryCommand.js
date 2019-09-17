@@ -2,10 +2,6 @@ YAHOO.namespace("lacuna.buildings");
 
 var $ = require('js/hacks/jquery');
 
-var MapActions = require('js/actions/menu/map');
-
-var EmpireRPCStore = require('js/stores/rpc/empire');
-
 if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacuna.buildings.PlanetaryCommand) {
 
 (function(){
@@ -31,40 +27,26 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
             return tabs;
         },
         getChildTabs : function() {
-            return [this._getPlanTab(), this._getResourcesTab(), this._getNotesTab()];
+            return [this._getPlanTab(), this._getResourcesTab()];
         },
         _getPlanetTab : function() {
-            var planet = this.result.planet;
-            var details = function(type,imgclass) {
-                var Type = Lib.capitalizeFirstLetter(type);
-                var stored   = planet[type+"_stored"] || planet[type];
-                var capacity = planet[type+"_capacity"];
-                var perhour  = planet[type+"_hour"];
-                if (!imgclass) {
-                    imgclass = Type;
-                }
-                return [
-                        '<li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/',type,'.png" title="',Type,'" class="small',imgclass,'" /></span>',
-                        '    <span class="pcStored" title="',Lib.formatNumber(stored),'">',Lib.convertNumDisplay(stored),'</span>',
-                        capacity ? [
-                        '    <span class="pcSlash">/</span>',
-                        '    <span class="pcCapacity" title="',Lib.formatNumber(capacity),'">',Lib.convertNumDisplay(capacity),'</span>'].join('') :
-                        [
-                         '<span class="pcSlash">&nbsp;</span><span class="pcCapacity">&nbsp;</span>'
-                        ].join(''),
-                        '  @ <span class="pcPerHour" title="',Lib.formatNumber(perhour),'">',Lib.convertNumDisplay(perhour),'/hr</span></li>',
-                       ].join('');
-            };
-            var tab = new YAHOO.widget.Tab({ label: "Planet", content: [
+            var planet = this.result.planet,
+                tab = new YAHOO.widget.Tab({ label: "Planet", content: [
                     '<div class="yui-g buildingDetailsExtra">',
                     '    <div class="yui-u first">',
                     '        <ul>',
-                    details('food'),
-                    details('ore'),
-                    details('water'),
-                    details('energy'),
-                    details('waste'),
-                    details('happiness','Happy'),
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/food.png" title="Food" class="smallFood" /></span>',
+                    '                <span class="pcStored">',planet.food_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.food_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.food_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/ore.png" title="Ore" class="smallOre" /></span>',
+                    '                <span class="pcStored">',planet.ore_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.ore_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.ore_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/water.png" title="Water" class="smallWater" /></span>',
+                    '                <span class="pcStored">',planet.water_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.water_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.water_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/energy.png" title="Energy" class="smallEnergy" /></span>',
+                    '                <span class="pcStored">',planet.energy_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.energy_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.energy_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/waste.png" title="Waste" class="smallWaste" /></span>',
+                    '                <span class="pcStored">',planet.waste_stored, '</span><span class="pcSlash">/</span><span class="pcCapacity">', planet.waste_capacity, '</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.waste_hour),'</span>/hr</li>',
+                    '            <li><span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" title="Happiness" class="smallHappy" /></span>',
+                    '                <span class="pcStored">',planet.happiness, '</span><span class="pcSlash">&nbsp;</span><span class="pcCapacity">&nbsp;</span> @ <span class="pcPerHour">', Lib.convertNumDisplay(planet.happiness_hour),'</span>/hr</li>',
                     '        </ul>',
                     '    </div>',
                     '    <div class="yui-u first">',
@@ -73,10 +55,8 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     '            <li><label>Planet Size:</label>',planet.size,'</li>',
                     '            <li><label>Plots Available:</label>',(planet.plots_available || 0)*1,'</li>',
                     '            <li><label>Population:</label>',Lib.formatNumber(planet.population),'</li>',
-                    '            <li title="',Lib.formatNumber(this.result.next_colony_cost),'"><label>Next Colony Cost:</label>',Lib.convertNumDisplay(this.result.next_colony_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
-                    '            <li title="',Lib.formatNumber(this.result.next_colony_srcs),'"><label>Next <span title="Short Range Colony Ship">SRCS</span> Cost:</label>',Lib.convertNumDisplay(this.result.next_colony_srcs),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
-                    this.result.next_station_cost ? ['<li title="',Lib.formatNumber(this.result.next_station_cost),'"><label>Next Station Cost:</label>',Lib.convertNumDisplay(this.result.next_station_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>'].join('') : '',
-                    '            <li title="',Lib.formatNumber(this.result.insurrect_value),'"><label>Insurrect Value:</label>',Lib.convertNumDisplay(this.result.insurrect_value),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
+                    '            <li><label>Next Colony Cost:</label>',Lib.formatNumber(this.result.next_colony_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
+                    this.result.next_station_cost ? ['<li><label>Next Station Cost:</label>',Lib.formatNumber(this.result.next_station_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>'].join('') : '',
                     '            <li><label>Location:</label>',planet.x,'x : ',planet.y,'y</li>',
                     '            <li><label>Zone:</label>',planet.zone,'</li>',
                     '            <li><label>Star:</label>',planet.star_name,' (Star ID: ',planet.star_id,')</li>',
@@ -155,9 +135,9 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                 food_items += [
                     '<li><label>',
                     food.titleCaps(),
-                    '</label><span class="pcStored" title="', Lib.formatNumber(this.result.food[food+"_stored"]),'">',
-                    Lib.convertNumDisplay(this.result.food[food+"_stored"]),
-                    '</span> @ <span class="pcPerHour" title="',Lib.formatNumber(this.result.food[food+"_hour"]),'">',
+                    '</label><span class="pcStored">',
+                    this.result.food[food+"_stored"],
+                    '</span> @ <span class="pcPerHour">',
                     Lib.convertNumDisplay(this.result.food[food+"_hour"]),
                     '</span>/hr</li>',
                 ].join('');
@@ -172,24 +152,24 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                 ore_items += [
                     '<li><label>',
                     ore.titleCaps(),
-                    '</label><span class="pcStored" title="', Lib.formatNumber(this.result.ore[ore+"_stored"]),'">',
-                    Lib.convertNumDisplay(this.result.ore[ore+"_stored"]),
-                    '</span> @ <span class="pcPerHour" title="',Lib.formatNumber(this.result.ore[ore+"_hour"]),'">',
+                    '</label><span class="pcStored">',
+                    this.result.ore[ore+"_stored"],
+                    '</span> @ <span class="pcPerHour">',
                     Lib.convertNumDisplay(this.result.ore[ore+"_hour"]),
                     '</span>/hr</li>',
                 ].join('');
             }
             ore_items += [
-                    '<li><label>Water</label><span class="pcStored" title="', Lib.formatNumber(this.result.planet.water_stored),'">',
-                    Lib.convertNumDisplay(this.result.planet.water_stored),
-                    '</span> @ <span class="pcPerHour" title="',Lib.formatNumber(this.result.planet.water_hour),'">',
+                    '<li><label>Water</label><span class="pcStored">',
+                    this.result.planet.water_stored,
+                    '</span> @ <span class="pcPerHour">',
                     Lib.convertNumDisplay(this.result.planet.water_hour),
                     '</span>/hr</li>',
                 ].join('');
             ore_items += [
-                    '<li><label>Energy</label><span class="pcStored" title="', Lib.formatNumber(this.result.planet.energy_stored),'">',
-                    Lib.convertNumDisplay(this.result.planet.energy_stored),
-                    '</span> @ <span class="pcPerHour" title="',Lib.formatNumber(this.result.planet.energy_hour),'">',
+                    '<li><label>Energy</label><span class="pcStored">',
+                    this.result.planet.energy_stored,
+                    '</span> @ <span class="pcPerHour">',
                     Lib.convertNumDisplay(this.result.planet.energy_hour),
                     '</span>/hr</li>',
                 ].join('');
@@ -210,19 +190,6 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                 ].join('')});
 
             return this.resourcesTab;
-        },
-        _getNotesTab : function() {
-            var notes = Game.GetCurrentPlanet().notes;
-            this.notesTab = new YAHOO.widget.Tab({ label: "Notes", content: [
-            '<div id="pccNotes">',
-            '    <textarea id="pccNotesText" title="Write down anything you would like to store with this body.">', $('<div/>').text(notes ? notes : '').html(), '</textarea>',
-            '    <button type="button" id="saveColonyNotes">Save</button>',
-            '</div>'
-            ].join('')});
-
-            Event.on("saveColonyNotes","click",this.SaveColonyNotes, this, true);
-
-            return this.notesTab;
         },
         Abandon : function() {
             var cp = Game.GetCurrentPlanet();
@@ -262,10 +229,7 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     }
 
                     this.fireEvent("onHide");
-
-                    // Go to home planet.
-                    var home = EmpireRPCStore.getData().home_planet_id;
-                    MapActions.changePlanet(home);
+                    Game.PlanetJump(); //jumps to home planet if nothing passed in
 
                     require('js/actions/menu/loader').hide();
                 },
@@ -311,20 +275,6 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                 }
             );
         },
-        SaveColonyNotes : function(){
-            var cp = Game.GetCurrentPlanet();
-            var notes = Dom.get("pccNotesText").value;
-            require('js/actions/menu/loader').show();
-            Game.Services.Body.set_colony_notes({
-                session_id: Game.GetSession(""),
-                body_id: cp.id,
-                options: { notes: notes }
-            }, {
-                success : function(o) {
-                    require('js/actions/menu/loader').hide();
-                }
-            });
-        },
         PlanPopulate : function(){
             var div = Dom.get("planDetails");
             if(div) {
@@ -346,7 +296,7 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                         Dom.addClass(nUl, "clearafter");
 
                         Dom.addClass(nLi,"planQuan");
-                        nLi.innerHTML = Lib.formatNumber(plan.quantity);
+                        nLi.innerHTML = plan.quantity;
                         nUl.appendChild(nLi);
 
                         nLi = li.cloneNode(false);

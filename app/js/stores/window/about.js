@@ -8,7 +8,12 @@ var AboutActions = require('js/actions/window/about');
 
 var AboutWindowStore = Reflux.createStore({
     mixins: [Window],
-    listenables: AboutActions
+    listenables: AboutActions,
+
+    getInitialState: function() {
+        this.data = false;
+        return this.data;
+    }
 });
 
 module.exports = AboutWindowStore;

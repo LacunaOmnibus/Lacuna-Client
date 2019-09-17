@@ -44,13 +44,7 @@ var Chat = React.createClass({
         // ChiselChat needs these.
         window.Firebase = require('firebase');
         window.$ = window.jQuery = require('jquery');
-        //window.PNotify = require('pnotify');
-        if (!window.PNotify) {
-            $.getScript('//cdnjs.cloudflare.com/ajax/libs/pnotify/2.0.0/pnotify.all.min.js', _.bind(function(data, textStatus, jqXHR) {
-                if (textStatus === 'success' && jqXHR.status === 200) {
-                }
-            }, this));
-        }
+        window.PNotify = require('pnotify');
 
         if (!window.ChiselChat) {
             // ChiselChat is not on mpn so we need to pull some tricks to get it into the app.
@@ -78,7 +72,7 @@ var Chat = React.createClass({
         try {
 
             var config = {
-                numMaxMessages: 100
+                maxNumMessages: 100
             };
 
             // Make sure we go to the right server's Firebase.

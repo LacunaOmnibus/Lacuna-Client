@@ -2,12 +2,12 @@
 
 var React = require('react');
 var Reflux = require('reflux');
+var $ = require('js/hacks/jquery');
 
 var EmpireRPCStore = require('js/stores/rpc/empire');
 var MapModeStore = require('js/stores/menu/mapMode');
 
 var centerBar = require('js/components/mixin/centerBar');
-var classNames = require('classnames');
 
 var UserActions = require('js/actions/user');
 var MapActions = require('js/actions/menu/map');
@@ -22,23 +22,27 @@ var TopBar = React.createClass({
         Reflux.connect(MapModeStore, 'mapMode'),
         centerBar('bar')
     ],
-
-    mapButtonTip: function() {
-        if (this.state.mapMode === MapModeStore.PLANET_MAP_MODE) {
-            return 'To Star Map';
-        } else {
-            return 'To Planet Map';
-        }
-    },
-
-    render: function() {
-        var barClass = classNames('ui inverted menu', {
-            red: this.state.empire.self_destruct_active,
-            blue: !this.state.empire.self_destruct_active
+    componentDidUpdate: function() {
+        // Now set it up.
+        $('a', this.refs.bar.getDOMNode()).popup('destroy').popup({
+            variation: 'inverted'
         });
 
+        var label = this.state.mapMode === MapModeStore.PLANET_MAP_MODE ?
+            'To Star Map' : 'To Planet Map';
+
+        $(this.refs.toggleMapButton.getDOMNode()).popup('destroy').popup({
+            variation: 'inverted',
+            content: label
+        });
+    },
+    componentWillUnmount: function() {
+        // Destroy!
+        $('a', this.refs.bar.getDOMNode()).popup('destroy');
+    },
+    render: function() {
         return (
-            <div className={barClass} ref="bar" style={{
+            <div className="ui blue inverted menu" ref="bar" style={{
                 position: 'fixed',
                 margin: 0,
                 zIndex: 2000,
@@ -47,13 +51,10 @@ var TopBar = React.createClass({
                 display: 'inline-block',
                 top: '15px'
             }}>
-
-                <a className="item" data-tip={this.mapButtonTip()}
-                    onClick={MapActions.toggleMapMode}>
+                <a className="item" ref="toggleMapButton" onClick={MapActions.toggleMapMode}>
                     <i className="map big icon"></i>
                 </a>
-
-                <a className="item" data-tip="Mail" onClick={MailActions.show}>
+                <a className="item" data-content="Mail" onClick={MailActions.show}>
                     <i className="mail big icon"></i>
                     {
                         this.state.empire.has_new_messages > 0
@@ -65,19 +66,16 @@ var TopBar = React.createClass({
                                 ''
                     }
                 </a>
-
-                <a className="item" data-tip="Essentia" onClick={EssentiaActions.show}>
+                <a className="item" data-content="Essentia" onClick={EssentiaActions.show}>
                     <i className="money big icon"></i>
                     <div className="ui teal floated right circular label">
-                        {this.state.empire.essentia}
+                        {parseInt(this.state.empire.essentia, 10)}
                     </div>
                 </a>
-
-                <a className="item" data-tip="Universe Rankings" onClick={StatsActions.show}>
+                <a className="item" data-content="Universe Rankings" onClick={StatsActions.show}>
                     <i className="find big icon"></i>
                 </a>
-
-                <a className="item" data-tip="Sign Out" onClick={UserActions.signOut}>
+                <a className="item" data-content="Sign Out" onClick={UserActions.signOut}>
                     <i className="power big icon"></i>
                 </a>
             </div>

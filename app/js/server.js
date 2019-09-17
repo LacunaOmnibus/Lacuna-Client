@@ -74,15 +74,13 @@ var handleSuccess = function(options, result) {
     if (result) {
         if (result.status) {
             StatusActions.update(result.status);
-
-            // Handle the legacy Status stuff...
-            YAHOO.lacuna.Game.ProcessStatus(result.status);
-
         } else if (options.method === 'get_status') {
-            StatusActions.update(result);
 
-            // Handle the legacy Status stuff...
-            YAHOO.lacuna.Game.ProcessStatus(result.status);
+            // Need to wrap this so that the relevant store gets the data correctly.
+            var obj = {};
+            obj[options.module] = result;
+
+            StatusActions.update(obj);
         }
     }
 

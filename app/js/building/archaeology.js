@@ -347,8 +347,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
 
             Dom.addClass(nLi,"excavatorLocation");
             nLi.innerHTML = ['<img src="',Lib.AssetUrl,'star_system/',obj.body.image,'.png" />', obj.body.name].join('');
-            Event.on(nLi, "click", function () { Game.StarJump({x:obj.body.x,y:obj.body.y}) }, obj, true);
-                     //this.excavatorClick, obj, true);
+            Event.on(nLi, "click", this.excavatorClick, obj, true);
             nUl.appendChild(nLi);
             
             if (obj.id > 0) {
@@ -444,7 +443,7 @@ if (typeof YAHOO.lacuna.buildings.Archaeology == "undefined" || !YAHOO.lacuna.bu
           if(this.ore.hasOwnProperty(oKey)) {
             var nOpt = opt.cloneNode(false);
             nOpt.value = oKey;
-            nOpt.innerHTML = [oKey, ' (', Lib.formatNumber(this.ore[oKey]), ')'].join('');
+            nOpt.innerHTML = [oKey, ' (', this.ore[oKey], ')'].join('');
             sel.appendChild(nOpt);
           }
         }

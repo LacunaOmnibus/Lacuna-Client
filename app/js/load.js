@@ -84,7 +84,6 @@
         require('js/building/embassy');
         require('js/building/energyReserve');
         require('js/building/entertainment');
-        require('js/building/essentiaVein');
         require('js/building/foodReserve');
         require('js/building/geneticsLab');
         require('js/building/intelligence');
@@ -124,7 +123,9 @@
         require('js/mapPlanet');
         require('js/messaging');
 
+        // invite has to come before essentia for some reason.
         require('js/invite');
+        require('js/essentia');
         require('js/profile');
         require('js/stats');
         require('js/info');

@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 YAHOO.namespace("lacuna");
 
 if (typeof YAHOO.lacuna.Captcha == "undefined" || !YAHOO.lacuna.Captcha) {
@@ -15,7 +13,7 @@ if (typeof YAHOO.lacuna.Captcha == "undefined" || !YAHOO.lacuna.Captcha) {
 
     var Captcha = function() {};
     Captcha.prototype = {
-        build: _.once(function() {
+        build: function() {
             this.id = "captcha";
 
             var container = document.createElement("div");
@@ -37,6 +35,7 @@ if (typeof YAHOO.lacuna.Captcha == "undefined" || !YAHOO.lacuna.Captcha) {
                 draggable:true,
                 effect:Game.GetContainerEffect(),
                 underlay:false,
+                modal:true,
                 close:true,
                 width:"390px",
                 zIndex:9999
@@ -47,7 +46,6 @@ if (typeof YAHOO.lacuna.Captcha == "undefined" || !YAHOO.lacuna.Captcha) {
                 this.captchaMessage = Dom.get("captchaMessage");
                 Event.on('captchaRefresh', 'click', this.refreshCaptcha, this, true);
                 Dom.removeClass(this.id, Lib.Styles.HIDDEN);
-                this.bringToTop();
             }, this, true);
             this.Dialog.hideEvent.subscribe(function(){
                 this._fail();
@@ -57,7 +55,7 @@ if (typeof YAHOO.lacuna.Captcha == "undefined" || !YAHOO.lacuna.Captcha) {
             }, this, true);
             this.Dialog.render();
             Game.OverlayManager.register(this.Dialog);
-        }),
+        },
         _getHtml : function() {
             return [
                 '<div class="hd">Verify Your Humanity</div>',
@@ -81,7 +79,6 @@ if (typeof YAHOO.lacuna.Captcha == "undefined" || !YAHOO.lacuna.Captcha) {
             this._retry = retry;
             this._fail = fail;
             this.refreshCaptcha();
-            this.Dialog.bringToTop();
         },
         solveCaptcha : function() {
             require('js/actions/menu/loader').show();
@@ -96,7 +93,6 @@ if (typeof YAHOO.lacuna.Captcha == "undefined" || !YAHOO.lacuna.Captcha) {
                     this._retry();
                 },
                 failure : function(o) {
-                    this.refreshCaptcha();
                     this.setError(o.error.message);
                     return true;
                 },

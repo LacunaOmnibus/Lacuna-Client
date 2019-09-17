@@ -1,9 +1,6 @@
 'use strict';
 
 var UserActions = require('js/actions/user');
-var Fingerprint2 = require('fingerprintjs2');
-
-var _ = require('lodash');
 
 YAHOO.namespace("lacuna");
 
@@ -102,9 +99,7 @@ if (typeof YAHOO.lacuna.Login == "undefined" || !YAHOO.lacuna.Login) {
             require('js/actions/menu/loader').show();
             this.setMessage("");
             var EmpireServ = Game.Services.Empire;
-            new Fingerprint2().get(_.bind(function(result){
-            console.log("browser: "+result);
-            EmpireServ.login({name:this.elName.value, password:this.elPass.value, api_key:Lib.ApiKey, browser:result},{
+            EmpireServ.login({name:this.elName.value, password:this.elPass.value, api_key:Lib.ApiKey},{
                 success : function(o){
                     YAHOO.log(o, "info", "Login.handleLogin.success");
                     //clear the session just in case
@@ -148,7 +143,7 @@ if (typeof YAHOO.lacuna.Login == "undefined" || !YAHOO.lacuna.Login) {
                     return true;
                 },
                 scope:this
-            })},this));
+            });
         },
         show : function(error) {
             if(!this.Dialog.cfg.getProperty("visible")) {
