@@ -1,16 +1,16 @@
 'use strict';
 
-var React = require('react');
-var Reflux = require('reflux');
+var React              = require('react');
+var Reflux             = require('reflux');
 
-var OptionsWindowStore = require('js/stores/window/options');
+var OptionsWindowStore = require('js/stores/windows/options');
 
 var OptionsWindow = React.createClass({
-    mixins: [
-        Reflux.connect(OptionsWindowStore, 'show')
+    mixins : [
+        Reflux.connect(OptionsWindowStore, 'optionsWindow')
     ],
-    render: function() {
-        if (this.state.show) {
+    render : function() {
+        if (this.state.optionsWindow.show) {
             YAHOO.lacuna.Profile.show();
         }
 

@@ -1,18 +1,32 @@
 'use strict';
 
-var Reflux = require('reflux');
-var $ = require('js/shims/jquery');
+var Reflux              = require('reflux');
 
 var RightSidebarActions = require('js/actions/menu/rightSidebar');
 
+var StatefulStore       = require('js/stores/mixins/stateful');
+
 var RightSidebarStore = Reflux.createStore({
-    listenables: RightSidebarActions,
-    onToggle: function() {
-        console.log('Toggling right sidebar.');
-        $('.ui.sidebar.right')
-            .sidebar('setting', 'transition', 'overlay')
-            .sidebar('setting', 'duration', 300)
-            .sidebar('toggle');
+    listenables : [
+        RightSidebarActions
+    ],
+
+    mixins : [
+        StatefulStore
+    ],
+
+    getDefaultData : function() {
+        return false;
+    },
+
+    onRightSidebarShow : function() {
+        console.log('Showing right sidebar');
+        this.emit(true);
+    },
+
+    onRightSidebarHide : function() {
+        console.log('Hiding right sidebar');
+        this.emit(false);
     }
 });
 

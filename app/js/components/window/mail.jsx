@@ -1,16 +1,16 @@
 'use strict';
 
-var React = require('react');
-var Reflux = require('reflux');
+var React           = require('react');
+var Reflux          = require('reflux');
 
-var MailWindowStore = require('js/stores/window/mail');
+var MailWindowStore = require('js/stores/windows/mail');
 
 var MailWindow = React.createClass({
-    mixins: [
-        Reflux.connect(MailWindowStore, 'show')
+    mixins : [
+        Reflux.connect(MailWindowStore, 'mailWindow')
     ],
-    render: function() {
-        if (this.state.show) {
+    render : function() {
+        if (this.state.mailWindow.show) {
             YAHOO.lacuna.Messaging.show();
         }
 
