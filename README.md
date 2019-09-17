@@ -71,3 +71,7 @@ If you're interested in hacking on the client, hit up the [developer's documenta
 # License
 
 See the [license file](LICENSE).
+
+# C#
+- https://github.com/communityus-mono/Epacsenur
+- https://github.com/communityus/communityus.github.io/blob/master/TLE/subs
