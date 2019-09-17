@@ -9,8 +9,10 @@ bower_components/
 
 # Built JS and CSS files.
 lacuna/
+build/
 
 # Cache to speed up the build process.
 browserify-cache.json
 
-index.html
+.publish
+dist/
