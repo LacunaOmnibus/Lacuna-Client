@@ -1,5 +1,7 @@
 YAHOO.namespace("lacuna");
 
+var _ = require('lodash');
+
 if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
 
 (function(){
@@ -63,7 +65,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
         this.createEvent("onMapRpc");
     };
     MapPlanet.prototype = {
-        _buildDetailsPanel : function() {
+        _buildDetailsPanel : _.once(function() {
             var panelId = "buildingDetails";
             var panel = document.createElement("div");
             panel.id = panelId;
@@ -181,8 +183,8 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
 
             this.buildingDetails.render();
             Game.OverlayManager.register(this.buildingDetails);
-        },
-        _buildBuilderPanel : function() {
+        }),
+        _buildBuilderPanel : _.once(function() {
             var panelId = "buildingBuilder";
 
             var panel = document.createElement("div");
@@ -487,7 +489,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
 
             this.buildingBuilder.render();
             Game.OverlayManager.register(this.buildingBuilder);
-        },
+        }),
 
         _fireRpcSuccess : function(result){
             this.fireEvent("onMapRpc", result);
@@ -656,6 +658,13 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
             this.locationId = planetId;
             this.ReLoad(silent);
         },
+        RefreshWithData : function(o) {
+            this.fireEvent("onMapRpc", o.result);
+            var planet = Game.GetCurrentPlanet();
+            this._map.setPlotsAvailable(planet.plots_available*1);
+            this._map.addTileData(o.result.buildings, true);
+            this._map.refresh();
+        },
         Refresh : function() {
             if(this.locationId) {
                 var BodyServ = Game.Services.Body,
@@ -667,11 +676,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
                 BodyServ.get_buildings(data,{
                     success : function(o){
                         //YAHOO.log(o, "info", "MapPlanet.Refresh");
-                        this.fireEvent("onMapRpc", o.result);
-                        var planet = Game.GetCurrentPlanet();
-                        this._map.setPlotsAvailable(planet.plots_available*1);
-                        this._map.addTileData(o.result.buildings, true);
-                        this._map.refresh();
+                        this.RefreshWithData(o);
                     },
                     scope:this
                 });
@@ -736,9 +741,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
         BuilderView : function(tile) {
             //YAHOO.log(tile, "info", "BuilderView");
 
-            if (!this.buildingBuilder) {
-                this._buildBuilderPanel();
-            }
+            this._buildBuilderPanel();
 
             Game.OverlayManager.hideAllBut(this.buildingBuilder.id);
             this.buildingBuilder.resetDisplay(this);
@@ -841,7 +844,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
                     newB.url = callback.url;
                     newB.x = x;
                     newB.y = y;
-                    newB.updated = (newB.level != this.buildings[newB.id].level);
+                    newB.updated = !this.buildings[newB.id] || (newB.level != this.buildings[newB.id].level);
                     this.ReloadBuilding(newB);
                     /*newB = this.CleanBuilding(newB);
                     this.buildings[newB.id] = newB;
@@ -868,9 +871,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
 
             require('js/actions/menu/loader').show();
 
-            if (!this.buildingDetails) {
-                this._buildDetailsPanel();
-            }
+            this._buildDetailsPanel();
 
             var panel = this.buildingDetails;
             Game.OverlayManager.hideAllBut(panel.id);

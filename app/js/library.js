@@ -318,6 +318,10 @@ if (typeof YAHOO.lacuna.Library == "undefined" || !YAHOO.lacuna.Library) {
             }
         },
 
+        capitalizeFirstLetter : function(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        },
+
         getSelectedOption : function(select) {
             //just making sure
             select = Dom.get(select);
@@ -446,20 +450,21 @@ if (typeof YAHOO.lacuna.Library == "undefined" || !YAHOO.lacuna.Library) {
         ],
         // planetarySort - Input: Game.EmpireData.planets, Output: A sorted array of planetary objects
         planetarySort : function(planets) {
+            var ED = YAHOO.lacuna.Game.EmpireData;
             var newplanets = [];
             for(var pId in planets) {
                 newplanets.push(planets[pId]);
             }
             newplanets.sort(function(a,b) {
-                if (a.name > b.name) {
-                    return 1;
-                }
-                else if (a.name < b.name) {
-                    return -1;
-                }
-                else {
-                    return 0;
-                }
+                var nameA = a.name;
+                var nameB = b.name;
+                if (ED.coloniesByName[nameA] && ED.stationsByName[nameB]) { return -1 }
+                if (ED.stationsByName[nameA] && ED.coloniesByName[nameB]) { return 1 }
+                nameA = nameA.toLowerCase( );
+                nameB = nameB.toLowerCase( );
+                if (nameA < nameB) {return -1;}
+                if (nameA > nameB) {return 1;}
+                return 0;
             });
             return newplanets;
         }

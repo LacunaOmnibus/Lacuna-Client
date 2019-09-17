@@ -194,7 +194,7 @@ if (typeof YAHOO.lacuna.Messaging == "undefined" || !YAHOO.lacuna.Messaging) {
                 close:true,
                 underlay:false,
                 width:"575px",
-                zIndex:10000
+                zIndex:1000
             });
             this.attachmentPanel.renderEvent.subscribe(function(){
                 this.map = Dom.get("attachmentMap");
@@ -230,6 +230,7 @@ if (typeof YAHOO.lacuna.Messaging == "undefined" || !YAHOO.lacuna.Messaging) {
                     this.map.innerHTML = tbody.join('');
 
                     this.show();
+                    this.bringToTop();
                 }
             };
 
@@ -1125,11 +1126,14 @@ if (typeof YAHOO.lacuna.Messaging == "undefined" || !YAHOO.lacuna.Messaging) {
         isVisible : function() {
             return this.messagingPanel.cfg.getProperty("visible");
         },
+        _load : _.once(function() {
+            this._buildPanel();
+            this._buildAttachmentPanel();
+        }),
         show : function() {
             Game.OverlayManager.hideAll();
 
-            this._buildPanel();
-            this._buildAttachmentPanel();
+            this._load();
 
             this.messagingPanel.show();
             this.currentTab = this.inbox.id;

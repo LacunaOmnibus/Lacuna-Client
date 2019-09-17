@@ -415,7 +415,7 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     nLi.innerHTML = ['<div class="yui-g" style="margin-bottom:2px;">',
                     '<div class="yui-g first">',
                     '    <div class="yui-u first" style="background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" title="',ship.type_human,'" style="width:105px;height:105px;" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" title="',ship.type_human,'" style="width:105px;height:105px;" />',
                     '    </div>',
                     '    <div class="yui-u">',
                     '        <span class="shipName">',ship.name,'</span>: ',
@@ -576,7 +576,7 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     nLi.innerHTML = ['<div class="yui-g" style="margin-bottom:2px;">',
                     '<div class="yui-g first">',
                     '    <div class="yui-u first" style="background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" title="',ship.type_human,'" style="width:115px;height:115px;" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" title="',ship.type_human,'" style="width:115px;height:115px;" />',
                     '    </div>',
                     '    <div class="yui-u">',
                     '        <span class="shipName">',ship.name,'</span>: ',
@@ -590,8 +590,8 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     '        <ul>',
                     '        <li><label style="font-weight:bold;">Attributes:</label></li>',
                     (ship.fleet_speed > 0 && ship.fleet_speed < ship.speed) ? '        <li style="white-space:nowrap;"><label style="font-style:italic">Fleet Speed: </label>'+ship.fleet_speed+'</li>' : '',
-                    '        <li style="white-space:nowrap;"><label style="font-style:italic">Speed: </label>',ship.speed,'</li>',
-                    '        <li style="white-space:nowrap;"><label style="font-style:italic">Hold Size: </label>',ship.hold_size,'</li>',
+                    '        <li style="white-space:nowrap;"><label style="font-style:italic">Speed: </label>',Lib.formatNumber(ship.speed),'</li>',
+                    '        <li style="white-space:nowrap;"><label style="font-style:italic">Hold Size: </label>',Lib.formatNumber(ship.hold_size),'</li>',
                     '        <li style="white-space:nowrap;"><label style="font-style:italic">Berth Level: </label>',ship.berth_level,'</li>',
                     '        </ul>',
                     '        <div class="shipPayload" style="display:none;margin-top:5px"><div><label style="font-weight:bold;">Payload:</label></div>',
@@ -601,8 +601,8 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     '    <div class="yui-u">',
                     '        <ul>',
                     '        <li style="white-space:nowrap;"><label style="font-style:italic">Occupants: </label>',ship.max_occupants,'</li>',
-                    '        <li style="white-space:nowrap;"><label style="font-style:italic">Stealth: </label>',ship.stealth,'</li>',
-                    '        <li style="white-space:nowrap;"><label style="font-style:italic">Combat: </label>',ship.combat,'</li>',
+                    '        <li style="white-space:nowrap;"><label style="font-style:italic">Stealth: </label>',Lib.formatNumber(ship.stealth),'</li>',
+                    '        <li style="white-space:nowrap;"><label style="font-style:italic">Combat: </label>',Lib.formatNumber(ship.combat),'</li>',
                     '        <li style="white-space:nowrap;"><label style="font-style:italic">Ship ID: </label>',ship.id,'</li>',
                     '        </ul>',
                     '        <div class="shipPayload" style="display:none;margin-top:5px">',
@@ -775,7 +775,7 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     Dom.addClass(nLi,"shipTypeImage");
                     Dom.setStyle(nLi, "background", ['transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center'].join(''));
                     Dom.setStyle(nLi, "text-align", "center");
-                    nLi.innerHTML = ['<img src="',Lib.AssetUrl,'ships/',ship.type,'.png" title="',ship.type_human,'" style="width:50px;height:50px;" />'].join('');
+                    nLi.innerHTML = ['<img src="',Lib.AssetUrl,'ships/',ship.image,'.png" title="',ship.type_human,'" style="width:50px;height:50px;" />'].join('');
                     nUl.appendChild(nLi);
 
                     nLi = li.cloneNode(false);
@@ -1015,7 +1015,7 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     Dom.addClass(nLi,"shipTypeImage");
                     Dom.setStyle(nLi, "background", ['transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center'].join(''));
                     Dom.setStyle(nLi, "text-align", "center");
-                    nLi.innerHTML = ['<img src="',Lib.AssetUrl,'ships/',ship.type,'.png" title="',ship.type_human,'" style="width:50px;height:50px;" />'].join('');
+                    nLi.innerHTML = ['<img src="',Lib.AssetUrl,'ships/',ship.image,'.png" title="',ship.type_human,'" style="width:50px;height:50px;" />'].join('');
                     nUl.appendChild(nLi);
 
                     nLi = li.cloneNode(false);
@@ -1238,7 +1238,7 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     nLi.Ship = ship;
                     nLi.innerHTML = ['<div class="yui-gd" style="margin-bottom:2px;">',
                     '    <div class="yui-u first" style="width:15%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" style="width:60px;height:60px;" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:60px;height:60px;" />',
                     '    </div>',
                     '    <div class="yui-u" style="width:67%">',
                     '        <div class="buildingName">[',ship.type_human,'] ',ship.name,'</div>',
@@ -1247,10 +1247,10 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     '            <span>Travel Time:<span>',Lib.formatTime(ship.estimated_travel_time),'</span></span>',
                     '        </div>',
                     '        <div><label style="font-weight:bold;">Attributes:</label>',
-                    '            <span>Speed:<span>',ship.speed,'</span></span>,',
-                    '            <span>Hold Size:<span>',ship.hold_size,'</span></span>,',
-                    '            <span>Stealth:<span>',ship.stealth,'</span></span>',
-                    '            <span>Combat:<span>',ship.combat,'</span></span>',
+                    '            <span>Speed:<span>',Lib.formatNumber(ship.speed),'</span></span>,',
+                    '            <span>Hold Size:<span>',Lib.formatNumber(ship.hold_size),'</span></span>,',
+                    '            <span>Stealth:<span>',Lib.formatNumber(ship.stealth),'</span></span>',
+                    '            <span>Combat:<span>',Lib.formatNumber(ship.combat),'</span></span>',
                     '            <span>ID:<span>',ship.id,'</span></span>',
                     '        </div>',
                     '    </div>',
@@ -1369,7 +1369,7 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     '<div class="yui-ge" style="margin-bottom:2px;">',
                     '    <div class="yui-g first">',
                     '        <div class="yui-u first" style="width:64px;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '            <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" style="width:60px;height:60px;" />',
+                    '            <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:60px;height:60px;" />',
                     '        </div>',
                     '        <div class="yui-u-7-8">',
                     '                <div>',
@@ -1381,10 +1381,10 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     '                    <span>Travel Time:<span>',Lib.formatTime(ship.estimated_travel_time),'</span></span>',
                     '                </div>',
                     '                <div><label style="font-weight:bold;">Attributes:</label>',
-                    '                    <span>Speed:<span>',ship.speed,'</span></span>,',
-                    '                    <span>Hold Size:<span>',ship.hold_size,'</span></span>,',
-                    '                    <span>Stealth:<span>',ship.stealth,'</span></span>',
-                    '                    <span>Combat:<span>',ship.combat,'</span></span>',
+                    '                    <span>Speed:<span>',Lib.formatNumber(ship.speed),'</span></span>,',
+                    '                    <span>Hold Size:<span>',Lib.formatNumber(ship.hold_size),'</span></span>,',
+                    '                    <span>Stealth:<span>',Lib.formatNumber(ship.stealth),'</span></span>',
+                    '                    <span>Combat:<span>',Lib.formatNumber(ship.combat),'</span></span>',
                     '                </div>',
                     '        </div>',
                     '    </div>',
@@ -1392,7 +1392,7 @@ if (typeof YAHOO.lacuna.buildings.SpacePort === "undefined" || !YAHOO.lacuna.bui
                     '    <div class="yui-g">',
                     '        <div class="yui-u-1">',
                     '            <input type="text"',
-                    '            id="FS'+skey+'" value=0 style="width:32px" />',
+                    '            id="FS'+skey+'" value="1" style="width:32px" />',
                     '            <button type="button">Send</button>',
                     '        </div>',
                     '    </div>',

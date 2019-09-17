@@ -1,5 +1,7 @@
 YAHOO.namespace("lacuna");
 
+var _ = require('lodash');
+
 if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
 
 (function(){
@@ -24,7 +26,7 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
         this._excavLabel = "Excavators";
     };
     MapStar.prototype = {
-        _buildDetailsPanel : function() {
+        _buildDetailsPanel : _.once(function() {
             var panelId = "starDetails";
 
             var panel = document.createElement("div");
@@ -148,8 +150,8 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
 
             this.starDetails.render();
             Game.OverlayManager.register(this.starDetails);
-        },
-        _buildPlanetDetailsPanel : function() {
+        }),
+        _buildPlanetDetailsPanel : _.once(function() {
             var panelId = "planetDetails";
             var panel = document.createElement("div");
             panel.id = panelId;
@@ -442,14 +444,9 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
             });
             this.planetDetails.render();
             Game.OverlayManager.register(this.planetDetails);
-        },
-        _buildFindPanel : function() {
+        }),
+        _buildFindPanel : _.once(function() {
             var panelId = "starFind";
-
-            // Deon't create twice.
-            if (this.starFind) {
-                return;
-            }
 
             var panel = document.createElement("div");
             panel.id = panelId;
@@ -538,7 +535,7 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
             },this,true);
 
             this.starFind.render();
-        },
+        }),
 
         IsVisible : function() {
             return this._isVisible;
@@ -705,7 +702,7 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
 
                     nLi.innerHTML = ['<div class="yui-gd" style="margin-bottom:2px;">',
                     '    <div class="yui-u first" style="width:20%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" style="width:75px;height:75px;" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:75px;height:75px;" />',
                     '    </div>',
                     '    <div class="yui-u" style="width:75%">',
                     '        <div class="buildingName">[',ship.type_human,'] ',ship.name,' - Arrives in: <span class="shipArrives">',Lib.formatTime(sec),'</span></div>',
@@ -775,7 +772,7 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
                     nLi.Ship = ship;
                     nLi.innerHTML = ['<div class="yui-gd" style="margin-bottom:2px;">',
                     '    <div class="yui-u first" style="width:15%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" style="width:60px;height:60px;" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:60px;height:60px;" />',
                     '    </div>',
                     '    <div class="yui-u" style="width:67%">',
                     '        <div class="buildingName">[',ship.type_human,'] ',ship.name,'</div>',
@@ -876,7 +873,7 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
 
                     nLi.innerHTML = ['<div class="yui-gd" style="margin-bottom:2px;">',
                     '    <div class="yui-u first" style="width:15%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" style="width:60px;height:60px;" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:60px;height:60px;" />',
                     '    </div>',
                     '    <div class="yui-u" style="width:67%">',
                     '        <div class="buildingName">[',ship.type_human,'] ',ship.name,'</div>',
@@ -1018,7 +1015,7 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
                     nLi.Ship = ship;
                     nLi.innerHTML = ['<div class="yui-gd" style="margin-bottom:5px;">',
                     '    <div class="yui-u first" style="width:20%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" style="width:50px;height:50px;" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:50px;height:50px;" />',
                     '    </div>',
                     '    <div class="yui-u" style="width:75%">',
                     '        <div class="buildingName">[',ship.type_human,'] ',ship.name,'</div>',
@@ -1072,7 +1069,7 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
                     nLi.Ship = ship;
                     nLi.innerHTML = ['<div class="yui-gd" style="margin-bottom:2px;">',
                     '    <div class="yui-u first" style="width:15%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                    '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" style="width:60px;height:60px;" />',
+                    '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:60px;height:60px;" />',
                     '    </div>',
                     '    <div class="yui-u" style="width:75%">',
                     '        <div class="buildingName">[',ship.type_human,'] ',ship.name,'</div>',
@@ -1604,7 +1601,7 @@ if (typeof YAHOO.lacuna.MapStar == "undefined" || !YAHOO.lacuna.MapStar) {
                 nLi.innerHTML = [
                 '<div class="yui-gd" style="margin-bottom:2px;">',
                 '    <div class="yui-u first" style="width:20%;background:transparent url(',Lib.AssetUrl,'star_system/field.png) no-repeat center;text-align:center;">',
-                '        <img src="',Lib.AssetUrl,'ships/',ship.type,'.png" style="width:50px;height:50px;" />',
+                '        <img src="',Lib.AssetUrl,'ships/',ship.image,'.png" style="width:50px;height:50px;" />',
                 '    </div>',
                 '    <div class="yui-u" style="width:78%">',
                 usable ? '        <button type="button">'+verb.charAt(0).toUpperCase()+verb.slice(1)+' Spies</button>' : '',
