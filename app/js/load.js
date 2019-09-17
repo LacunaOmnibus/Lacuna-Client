@@ -1,7 +1,7 @@
 'use strict';
 
 (function(){
-    // These libs are really important. Grab them before anything else happens.
+    // These libs are really important. Grab them before anything else moves.
     window.React = require('react');
     window.$ = window.jQuery = require('jquery');
     window._ = require('lodash');
@@ -130,6 +130,7 @@
 
         // Menu stuff
         require('js/mapPlanet');
+        require('js/about');
         require('js/textboxList');
         require('js/messaging');
         require('js/essentia');
@@ -140,7 +141,7 @@
         require('js/info');
         require('js/notify');
         require('js/captcha');
-        require('js/components/menu');
+        require('js/menu');
 
         // Start everything!
         YAHOO.widget.Logger.enableBrowserConsole();

@@ -1962,7 +1962,7 @@ _getWasteChainTab : function() {
                 });
             }
             else {
-                this.SupplyChainMaxCount();
+                this.supplyChainMaxCount();
                 this.SupplyChainList();
             }
         },
@@ -2154,7 +2154,7 @@ _getWasteChainTab : function() {
         },
         viewSupplyShips : function(e) {
             // we have 2 asynchronous functions below both wanting to hide
-            // the pulser - keep a count of requests so it only gets hidden
+            // the pulsar - keep a count of requests so it only gets hidden
             // once they've both completed
             var request_count = 0;
             
