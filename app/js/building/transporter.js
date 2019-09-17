@@ -246,20 +246,18 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
             this.subscribe("onLoadPlans", this.populatePushPlanName, this, true);
             this.subscribe("onLoadShips", this.populatePushShipName, this, true);
             this.subscribe("onLoadPrisoners", this.populatePushPrisonerName, this, true);
-            
+            var This = this;
+
             Event.onAvailable("tradePushColony", function(){
                 var opt = document.createElement("option"),
-                    planets = Lib.planetarySort(Game.EmpireData.planets),
-                    cp = Game.GetCurrentPlanet(),
-                    nOpt;
+                    planets = This.transport.pushable;
 
                 for(var p=0; p<planets.length; p++) {
-                    if(planets[p].id != cp.id){
-                        nOpt = opt.cloneNode(false);
-                        nOpt.value = planets[p].id;
-                        nOpt.innerHTML = planets[p].name;
-                        this.appendChild(nOpt);
-                    }
+                    var nOpt = opt.cloneNode(false);
+                    var b = planets[p];
+                    nOpt.value = b.id;
+                    nOpt.innerHTML = b.name + " (" + b.x + "," + b.y + "): " + b.zone;
+                    this.appendChild(nOpt);
                 }
             });
             
@@ -971,8 +969,8 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         },
         updateAddCargo : function(byVal) {
             var c = Dom.get("tradeAddCargo"),
-                cv = c.innerHTML*1;
-            c.innerHTML = cv + byVal;
+                cv = c.innerHTML.replace(/,/g,"")*1;
+            c.innerHTML = Lib.formatNumber(cv + byVal);
         },
         AddResource : function(e, matchedEl, container){
             var quantity = matchedEl.previousSibling.value*1,
@@ -1233,14 +1231,14 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
                 }
                 
                 if(newTotal == 0) {
-                    this.updateAddCargo(li.Object.quantity * -1);
+                    this.updateAddCargo(li.Object.quantity * -1 * li.Object.size);
                     Event.purgeElement(li);
                     li.parentNode.removeChild(li);
                 }
                 else {
                     lq.innerHTML = newTotal;
                     li.Object.quantity = newTotal;
-                    this.updateAddCargo(diff);
+                    this.updateAddCargo(diff * li.Object.size);
                     var a = new Util.ColorAnim(lq, {color:{from:'#f00',to:'#fff'}}, 1.5);
                     a.animate();
                 }
@@ -1466,8 +1464,8 @@ if (typeof YAHOO.lacuna.buildings.Transporter == "undefined" || !YAHOO.lacuna.bu
         },
         updatePushCargo : function(byVal) {
             var c = Dom.get("tradePushCargo"),
-                cv = c.innerHTML*1;
-            c.innerHTML = cv + byVal;
+                cv = c.innerHTML.replace(/,/g,"")*1;
+            c.innerHTML = Lib.formatNumber(cv + byVal);
         },
         PushAddResource : function(e, matchedEl, container){
             var quantity = matchedEl.previousSibling.value*1,

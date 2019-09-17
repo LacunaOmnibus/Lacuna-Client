@@ -1,6 +1,6 @@
 YAHOO.namespace("lacuna");
 
-var $ = require('js/hacks/jquery');
+var $ = require('js/shims/jquery');
 
 if (typeof YAHOO.lacuna.Mapper == "undefined" || !YAHOO.lacuna.Mapper) {
 
@@ -88,8 +88,10 @@ if (typeof YAHOO.lacuna.Mapper == "undefined" || !YAHOO.lacuna.Mapper) {
             var maxHeight = this._map.height;
             if(mb) {
                 var tileSize = this._map.tileSizeInPx,
-                    extraSpaceHeight = 30 + Math.ceil(tileSize / 2),
-                    extraSpaceWidth = 100 + Math.ceil(tileSize / 2),
+                    extraSpaceTop = 60,
+                    extraSpaceBottom = 140,
+                    extraSpaceLeft = 150,
+                    extraSpaceRight = 150;
                     maxBoundsWidth = (mb.x2Right - mb.x1Left) * tileSize,
                     maxBoundsHeight = (mb.y1Top - mb.y2Bottom) * tileSize;
 
@@ -99,21 +101,21 @@ if (typeof YAHOO.lacuna.Mapper == "undefined" || !YAHOO.lacuna.Mapper) {
                 if(maxHeight > maxBoundsHeight) {
                     maxHeight = maxBoundsHeight;
                 }
-                var    cb = this.calcCoordBounds(this.left + mx + extraSpaceWidth, this.top + my + extraSpaceHeight, this.left + mx + maxWidth - extraSpaceWidth, this.top + my + maxHeight - extraSpaceHeight);
+                var    cb = this.calcCoordBounds(this.left + mx + extraSpaceLeft, this.top + my + extraSpaceTop, this.left + mx + maxWidth - extraSpaceRight, this.top + my + maxHeight - extraSpaceBottom);
                 //if out of bounds, only move to max
                 //x axis
                 if(mx < 0 && cb.x1 < mb.x1Left) { //if moving left
-                    mx = mb.x1Left * tileSize - extraSpaceWidth - this.left;
+                    mx = mb.x1Left * tileSize - extraSpaceLeft - this.left;
                 }
                 else if(mx > 0 && cb.x2 > (mb.x2Right+1)) { //if moving right
-                    mx = ((mb.x2Right+1) * tileSize) - (this.left + maxWidth - extraSpaceWidth);
+                    mx = ((mb.x2Right+1) * tileSize) - (this.left + maxWidth - extraSpaceRight);
                 }
                 //y axis
                 if(my < 0 && cb.y1 > mb.y1Top){ //if moving up
-                    my = 0 - mb.y1Top * tileSize - extraSpaceHeight - this.top;
+                    my = 0 - mb.y1Top * tileSize - extraSpaceTop - this.top;
                 }
                 else if(my > 0 && cb.y2 < (mb.y2Bottom-1)) { //if moving down
-                    my = - ((mb.y2Bottom-1) * tileSize) - (this.top + maxHeight - extraSpaceHeight);
+                    my = - ((mb.y2Bottom-1) * tileSize) - (this.top + maxHeight - extraSpaceBottom);
                 }
             }
             //modify with new values now
@@ -601,6 +603,9 @@ if (typeof YAHOO.lacuna.Mapper == "undefined" || !YAHOO.lacuna.Mapper) {
         _createActionIcon : function() {
             if(this.actionIcon) {
                 if(this.data) {
+                    if (Game.GetCookieSettings("showLevels","0") == "1") {
+                        Dom.setStyle(this.actionIcon, "visibility", "visible");
+                    }
                     this.actionIcon.innerHTML = ['<div class="planetMapTileActionLevel">',this.data.level,'</div>'].join('');
                 }
                 else {

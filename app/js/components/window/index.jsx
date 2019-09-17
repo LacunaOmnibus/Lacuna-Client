@@ -1,7 +1,9 @@
 'use strict';
 
 var React = require('react');
-var $ = require('js/hacks/jquery');
+var $ = require('js/shims/jquery');
+
+var ReactTooltip = require('react-tooltip');
 
 var TopBar = require('js/components/menu/topBar');
 var BottomBar = require('js/components/menu/bottomBar');
@@ -18,6 +20,7 @@ var InviteWindow = require('js/components/window/invite');
 var MailWindow = require('js/components/window/mail');
 var NotesWindow = require('js/components/window/notes');
 var OptionsWindow = require('js/components/window/options');
+var PromotionsWindow = require('js/components/window/promotions');
 var ServerClockWindow = require('js/components/window/serverClock');
 var StatsWindow = require('js/components/window/stats');
 
@@ -33,6 +36,16 @@ var Window = React.createClass({
                  */ }
                 <LeftSidebar />
                 <RightSidebar />
+
+                { /*
+                    This sets all the tooltips in the entire client.
+                    See http://npmjs.org/package/react-tooltip for usage.
+                */ }
+                <ReactTooltip
+                    effect="solid"
+                    place="bottom"
+                    type="dark"
+                />
 
                 { /* One container to rule them all... */ }
                 <div className="pusher">
@@ -51,6 +64,7 @@ var Window = React.createClass({
                     <MailWindow />
                     <NotesWindow />
                     <OptionsWindow />
+                    <PromotionsWindow />
                     <ServerClockWindow />
                     <StatsWindow />
 

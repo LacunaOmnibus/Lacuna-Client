@@ -4,12 +4,18 @@ YAHOO.namespace("lacuna");
 
 var React = require('react');
 var _ = require('lodash');
+var $ = require('js/shims/jquery');
+
+var ReactTooltip = require('react-tooltip');
 
 var Window = require('js/components/window');
 
+var KeyboardActions = require('js/actions/keyboard');
 var MapActions = require('js/actions/menu/map');
 var MenuActions = require('js/actions/menu');
 var SessionActions = require('js/actions/session');
+var TickerActions = require('js/actions/ticker');
+
 var UserActions = require('js/actions/user');
 var BodyRPCStore = require('js/stores/rpc/body');
 
@@ -94,13 +100,28 @@ if (typeof YAHOO.lacuna.Game == "undefined" || !YAHOO.lacuna.Game) {
                     }
                 }
             };
-            Game.escListener = new Util.KeyListener(document, { keys:27 }, { fn:Game.OverlayManager.hideAll, scope:Game.OverlayManager, correctScope:true } );
+            Game.escListener = new Util.KeyListener(document, { keys:27 }, {
+                fn: function() {
+                    Game.OverlayManager.hideAll();
+                    KeyboardActions.escKey();
+                },
+                scope: Game.OverlayManager,
+                correctScope: true
+            });
 
             //get resources right away since they don't depend on anything.
             Game.Resources = require('js/resources');
             Game.PreloadUI();
 
             Game.Services = Game.InitServices(YAHOO.lacuna.SMD.Services);
+
+            // The tooltips can often disappear because their parent elements are removed from the
+            // DOM and then replaced later. For example, switching between tabs that each have
+            // tooltips in them. Calling this every tick ensures that the tooltips are rebuilt if
+            // they disappear.
+            TickerActions.tick.listen(function() {
+                ReactTooltip.rebuild();
+            });
 
             var session = Game.GetSession();
             if (query.referral) {
@@ -135,6 +156,7 @@ if (typeof YAHOO.lacuna.Game == "undefined" || !YAHOO.lacuna.Game) {
                 Game.DoLogin();
                 return;
             }
+
             //Run rest of UI since we're logged in
             Game.GetStatus({
                 success:Game.Run,
@@ -198,8 +220,7 @@ if (typeof YAHOO.lacuna.Game == "undefined" || !YAHOO.lacuna.Game) {
                         Game.QuickDialog({
                             width: "400px",
                             text: ['Welcome to the Lacuna Expanse.  It is recommended that you play through the in game tutorial to familiarize yourself with the game, and to get some free resources to build up your empire.',
-                                '<p>If you choose to skip the tutorial now you may find it by clicking <img src="',Lib.AssetUrl,'ui/s/inbox.png" title="Inbox" style="width:19px;height:22px;vertical-align:middle;margin:-5px 0 -4px -2px" /> in the upper left of the interface and find the message with the subject `Welcome`.</p>',
-                                '<p>For some extra help, look to the upper right of the interface for the <img src="',Lib.AssetUrl,'ui/s/tutorial.png" title="Interface Tutorial" style="width:19px;height:22px;vertical-align:middle;margin-left:-3px" /> button.</p>',
+                                '<p>If you choose to skip the tutorial now you may find it by clicking <img src="',Lib.AssetUrl,'ui/s/inbox.png" title="Inbox" style="width:19px;height:22px;vertical-align:middle;margin:-5px 0 -4px -2px" /> at the top of the interface and find the message with the subject `Welcome`.</p>',
                                 '<p>Thanks for playing!</p>'].join(''),
                             buttons: [
                                 { text:"View Tutorial", handler:function() {
@@ -544,8 +565,9 @@ if (typeof YAHOO.lacuna.Game == "undefined" || !YAHOO.lacuna.Game) {
         StarJump : function(star) {
             YAHOO.log(star, "debug", "StarJump");
             Game.OverlayManager.hideAll();
-            Lacuna.MapPlanet.MapVisible(false);
-            Lacuna.MapStar.MapVisible(true);
+            require('js/stores/menu/mapMode').setMapMode('starMap');
+            //Lacuna.MapPlanet.MapVisible(false);
+            //Lacuna.MapStar.MapVisible(true);
             Lacuna.MapStar.Jump(star.x*1, star.y*1);
         },
         GetBuildingDesc : function(url) {

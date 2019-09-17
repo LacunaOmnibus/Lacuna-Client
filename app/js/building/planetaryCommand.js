@@ -1,10 +1,11 @@
 YAHOO.namespace("lacuna.buildings");
 
-var $ = require('js/hacks/jquery');
+var $ = require('js/shims/jquery');
 
 var MapActions = require('js/actions/menu/map');
 
 var EmpireRPCStore = require('js/stores/rpc/empire');
+var BodyRPCStore = require('js/stores/rpc/body');
 
 if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacuna.buildings.PlanetaryCommand) {
 
@@ -74,7 +75,9 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                     '            <li><label>Plots Available:</label>',(planet.plots_available || 0)*1,'</li>',
                     '            <li><label>Population:</label>',Lib.formatNumber(planet.population),'</li>',
                     '            <li title="',Lib.formatNumber(this.result.next_colony_cost),'"><label>Next Colony Cost:</label>',Lib.convertNumDisplay(this.result.next_colony_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
+                    '            <li title="',Lib.formatNumber(this.result.next_colony_srcs),'"><label>Next <span title="Short Range Colony Ship">SRCS</span> Cost:</label>',Lib.convertNumDisplay(this.result.next_colony_srcs),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
                     this.result.next_station_cost ? ['<li title="',Lib.formatNumber(this.result.next_station_cost),'"><label>Next Station Cost:</label>',Lib.convertNumDisplay(this.result.next_station_cost),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>'].join('') : '',
+                    '            <li title="',Lib.formatNumber(this.result.insurrect_value),'"><label>Insurrect Value:</label>',Lib.convertNumDisplay(this.result.insurrect_value),'<span class="smallImg"><img src="',Lib.AssetUrl,'ui/s/happiness.png" /></span></li>',
                     '            <li><label>Location:</label>',planet.x,'x : ',planet.y,'y</li>',
                     '            <li><label>Zone:</label>',planet.zone,'</li>',
                     '            <li><label>Star:</label>',planet.star_name,' (Star ID: ',planet.star_id,')</li>',
@@ -289,6 +292,9 @@ if (typeof YAHOO.lacuna.buildings.PlanetaryCommand == "undefined" || !YAHOO.lacu
                             Dom.get("commandPlanetNewName").value = "";
                             Dom.get("commandPlanetCurrentName").innerHTML = newName;
                             Game.EmpireData.planets[planetId].name = newName;
+                            var data = BodyRPCStore.getData();
+                            data.name = newName;
+                            BodyRPCStore.setState(data);
 
                             if(Lacuna.MapStar._map) {
                                 Lacuna.MapStar._map.tileCache[cp.x][cp.y].name = newName; // Change the name in the cache

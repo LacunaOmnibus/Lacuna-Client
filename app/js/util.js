@@ -1,5 +1,18 @@
 'use strict';
 
+var moment = require('moment');
+
+var xPad=function (x, pad, r) {
+    if(typeof r === 'undefined') {
+        r=10;
+    }
+    for( ; parseInt(x, 10)<r && r>1; r/=10) {
+        x = pad.toString() + x;
+    }
+    return x.toString();
+};
+
+
 module.exports.reduceNumber = function(number, always) {
     if(number >= 100000000000000000 || number <= -100000000000000000) {
         //101Q
@@ -47,7 +60,7 @@ module.exports.reduceNumber = function(number, always) {
     }
 };
 
-module.exports.serverDateToMs = function(serverDate) {
+module.exports.serverDateToDateObj = function(serverDate) {
     //"23 03 2010 01:20:11 +0000"
     var pieces = serverDate.split(' '), //[day month year hr:min:sec timez]
         time = pieces[3].split(':');
@@ -57,9 +70,51 @@ module.exports.serverDateToMs = function(serverDate) {
     dt.setUTCHours(time[0]*1);
     dt.setUTCMinutes(time[1]*1);
     dt.setUTCSeconds(time[2]*1);
-    return dt.getTime();
+
+    return dt;
+};
+
+module.exports.serverDateToMs = function(serverDate) {
+    return module.exports.serverDateToDateObj(serverDate).getTime();
 };
 
 module.exports.int = function(number) {
     return parseInt(number, 10);
+};
+
+module.exports.formatTime = function(totalSeconds) {
+    if (totalSeconds < 0) {
+        return "";
+    }
+
+    var secondsInDay = 60 * 60 * 24,
+    secondsInHour = 60 * 60,
+    day = Math.floor(totalSeconds / secondsInDay),
+    hleft = totalSeconds % secondsInDay,
+    hour = Math.floor(hleft / secondsInHour),
+    sleft = hleft % secondsInHour,
+    min = Math.floor(sleft / 60),
+    seconds = Math.floor(sleft % 60);
+
+    if(day > 0) {
+        return [day,xPad(hour,'0'),xPad(min,'0'),xPad(seconds,'0')].join(':');
+    }
+    else if(hour > 0) {
+        return [hour,xPad(min,'0'),xPad(seconds,'0')].join(':');
+    }
+    else {
+        return [min,xPad(seconds,'0')].join(':');
+    }
+};
+
+module.exports.formatMillisecondTime = function(ms) {
+    return this.formatTime(ms / 1000);
+};
+
+module.exports.serverDateToMoment = function(str) {
+    return moment(str, 'DD MM YYYY HH:mm:ss ZZ');
+};
+
+module.exports.formatMomentLong = function(theMoment) {
+    return theMoment.format('dddd, Do MMMM HH:mm:ss ZZ');
 };

@@ -47,7 +47,7 @@ var Chat = React.createClass({
         //window.PNotify = require('pnotify');
         if (!window.PNotify) {
             $.getScript('//cdnjs.cloudflare.com/ajax/libs/pnotify/2.0.0/pnotify.all.min.js', _.bind(function(data, textStatus, jqXHR) {
-                if (textStatus === 'success' && jsXHR.status === 200) {
+                if (textStatus === 'success' && jqXHR.status === 200) {
                 }
             }, this));
         }
@@ -78,7 +78,7 @@ var Chat = React.createClass({
         try {
 
             var config = {
-                maxNumMessages: 100
+                numMaxMessages: window.cc_max_messages || 100
             };
 
             // Make sure we go to the right server's Firebase.
@@ -101,6 +101,7 @@ var Chat = React.createClass({
                     var msg = e.content.replace(/^\/wiki/, "");
                     msg = msg.trim();
                     if (msg.length) {
+                        msg = msg.replace(/ /g,"+");
                         e.content = "http://community.lacunaexpanse.com/wiki?func=search&query="+msg;
                     }
                     else {
@@ -113,11 +114,12 @@ var Chat = React.createClass({
             });
 
             this.chat.addCommand({
-                match : /^\/planet$/,
+                match : /^\/planet/,
                 func : function(message, chatui) {
                     var body = BodyRPCStore.getData();
 
-                    message.content = "My current planet is '"+body.name+"' at '"+body.x+"|"+body.y+"' in zone '"+body.zone+"'";
+                    message.content = message.content.replace(/^\/planet/,
+                        "My current planet is '"+body.name+"' at '"+body.x+"|"+body.y+"' in zone '"+body.zone+"'\n");
                 },
                 name : "/planet",
                 help : "Show everyone where your current planet is.",

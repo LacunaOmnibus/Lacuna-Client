@@ -19,8 +19,7 @@ var Map = React.createClass({
     ],
     getInitialState: function() {
         return {
-            planet: '',
-            menuVisible: false
+            planet: ''
         };
     },
     previousMapMode: '',
@@ -63,9 +62,9 @@ var Map = React.createClass({
         ) {
             // Now that we've made sure...
             // Render the planet view.
-            Lacuna.MapStar.MapVisible(false);
-            Lacuna.MapPlanet.MapVisible(true);
-            Lacuna.MapPlanet.Load(this.state.planet, true);
+            Lacuna.MapStar.MapVisible(this.state.mapMode === MapModeStore.STAR_MAP_MODE);
+            Lacuna.MapPlanet.MapVisible(this.state.mapMode === MapModeStore.PLANET_MAP_MODE);
+            Lacuna.MapPlanet.Load(this.state.planet, true, this.state.mapMode === MapModeStore.STAR_MAP_MODE);
 
             // Sadly, we have to pull hacky tricks like this to avoid infinite loops.
             this.previousPlanetId = this.state.planet;

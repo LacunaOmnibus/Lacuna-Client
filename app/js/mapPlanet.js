@@ -814,6 +814,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
                     b.id = o.result.building.id;
                     b.level = o.result.building.level;
                     b.pending_build = o.result.building.pending_build;
+                    b.work = o.result.building.work;
                     b.x = x;
                     b.y = y;
                     //YAHOO.log(b, "info", "MapPlanet.Build.success.building");
@@ -939,7 +940,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
                 panel.img.src = [Lib.AssetUrl, "planet_side/100/", building.image, ".png"].join('');
                 panel.desc.innerHTML = Game.GetBuildingDesc(building.url);
                 if(building.pending_build) {
-                    panel.timeLeftLi.innerHTML = "<label>Build Time Remaining:</label>" + Lib.formatTime(building.pending_build.seconds_remaining);
+                    panel.timeLeftLi.innerHTML = "<label>Build Time Remaining:</label> " + Lib.formatTime(building.pending_build.seconds_remaining);
                     if(building.pending_build.seconds_remaining > 0) {
                         panel.addQueue(building.pending_build.seconds_remaining,
                             function(remaining, elm){
@@ -950,7 +951,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
                                     this.DetailsView({data:{id:building.id,url:building.url},x:building.x,y:building.y});
                                 }
                                 else {
-                                    elm.innerHTML = "<label>Build Time Remaining:</label>" + Lib.formatTime(rf);
+                                    elm.innerHTML = "<label>Build Time Remaining:</label> " + Lib.formatTime(rf);
                                 }
                             },
                             panel.timeLeftLi,
@@ -989,7 +990,7 @@ if (typeof YAHOO.lacuna.MapPlanet == "undefined" || !YAHOO.lacuna.MapPlanet) {
         },
 
         CleanBuilding : function(building) {
-            building.efficiency = (building.efficiency || 100)*1;
+            building.efficiency = building.efficiency*1;
             if(building.repair_costs && building.efficiency == 100) {
                 delete building.repair_costs;
             }

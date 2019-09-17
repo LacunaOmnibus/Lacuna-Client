@@ -1018,6 +1018,13 @@ if (typeof YAHOO.lacuna.SMD == "undefined" || !YAHOO.lacuna.SMD) {
                         ],
                         "returns":{"type":"object"}
                     },
+                    "name_spies" : {
+                        "description": "Set the name of all spies",
+                        "parameters": [
+                            {"name":"options", "type":"object", "optional":false},
+                        ],
+                        "returns":{"type":"object"}
+                    },
                     "subsidize_training" : {
                         "description": "Will spend 1 essentia per spy to complete the training of all spies immediately.",
                         "parameters": [
@@ -3071,7 +3078,8 @@ if (typeof YAHOO.lacuna.SMD == "undefined" || !YAHOO.lacuna.SMD) {
                     "parameters": [
                         {"name":"name", "type":"string", "optional":false},
                         {"name":"password", "type":"string", "optional":false},
-                        {"name":"api_key", "type":"string", "optional":false}
+                        {"name":"api_key", "type":"string", "optional":false},
+                        {"name":"browser", "type":"string", "optional":false}
                     ],
                     "returns":{"type":"object"}
                 },
@@ -3963,6 +3971,39 @@ if (typeof YAHOO.lacuna.SMD == "undefined" || !YAHOO.lacuna.SMD) {
                 "target":"/policestation",
 
                 "services": {
+                    "view_foreign_ships" : {
+                        "description": "Shows you all the foreign ships that are incoming. However, the list is filtered by the stealth of the ship vs the level of the PoliceStation.",
+                        "parameters": [
+                            {"name":"session_id", "type":"string", "optional":false},
+                            {"name":"building_id", "type":"string", "optional":false},
+                            {"name":"page_number", "type":"number", "optional":true}
+                        ],
+                        "returns":{"type":"object"}
+                        /*
+                             {
+                                "ships" : [
+                                    {
+                                        "id" : "id-goes-here",
+                                        "name" : "CS3",
+                                        "type_human" : "Cargo Ship",
+                                        "type" : "cargo_ship",
+                                        "date_arrives" : "02 01 2010 10:08:33 +0600",
+                                        "from" : {
+                                            "id" : "id-goes-here",
+                                            "name" : "Earth",
+                                            "empire" : {
+                                                "id" : "id-goes-here",
+                                                "name" : "Earthlings"
+                                            }
+                                        }
+                                    },
+                                    ...
+                                ],
+                                "number_of_ships" : 13,
+                                "status" : { ... }
+                             }
+                        */
+                    },
                     "view_prisoners" : {
                         "description": "",
                         "parameters": [

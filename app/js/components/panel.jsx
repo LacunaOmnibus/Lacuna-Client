@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react');
-var $ = require('js/hacks/jquery');
+var $ = require('js/shims/jquery');
 
 var Draggable = require('react-draggable');
 
@@ -42,22 +42,24 @@ var Panel = React.createClass({
                     left: (($(window.document).width() - this.props.width) / 2) + 'px'
                 }}>
                     <div className="drag-handle" style={{
-                        cursor: 'move',
-                        width: '250px',
-                        color: '#FFD800',
-                        fontSize: '1.3em',
-                        marginLeft: '15px',
-                        paddingLeft: '10px',
+                        backgroundColor: '#184F82',
                         border: '1px solid black',
-                        borderBottom: '0', // Avoid the border appearing thicker on the bottom edge.
-                        borderTopLeftRadius: '7px',
-                        borderTopRightRadius: '7px',
-                        backgroundColor: '#184F82'
+                        borderBottom: 0, // Avoid the border appearing thicker on the bottom edge.
+                        borderTopLeftRadius: 7,
+                        borderTopRightRadius: 7,
+                        color: '#FFD800',
+                        cursor: 'move',
+                        fontSize: '110%',
+                        fontWeight: 'bold',
+                        lineHeight: '1.75',
+                        marginLeft: 10,
+                        paddingLeft: 10,
+                        width: 250
                     }}>
                         {this.props.title}
                     </div>
                     <div onClick={this.props.onClose} style={{
-                        background: 'url("//d16cbq0l6kkf21.cloudfront.net/assets/ui/close.png") no-repeat scroll 0 0 transparent',
+                        background: 'url("//192.168.0.37:8080/assets/ui/close.png") no-repeat scroll 0 0 transparent',
                         width: '21px',
                         height: '21px',
                         top: 0,
@@ -76,6 +78,7 @@ var Panel = React.createClass({
                     }}>
                         <div style={{
                             overflow: 'auto',
+                            overflowX: 'hidden',
                             height: this.props.height + 'px',
                             padding: '5px'
                         }}>
