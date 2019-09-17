@@ -1,35 +1,30 @@
 'use strict';
 
-var React = require('react');
-var Reflux = require('reflux');
+var React        = require('react');
+var Reflux       = require('reflux');
 
 var BodyRPCStore = require('js/stores/rpc/body');
 var MapModeStore = require('js/stores/menu/mapMode');
-var PlanetStore = require('js/stores/menu/planet');
-var MenuStore = require('js/stores/menu');
+var PlanetStore  = require('js/stores/menu/planet');
+var MenuStore    = require('js/stores/menu');
 
 // TODO: factor out all this glue code
 
 var Map = React.createClass({
-    mixins: [
+    mixins : [
         Reflux.connect(MapModeStore, 'mapMode'),
-        Reflux.connect(BodyRPCStore, 'body'),
+        Reflux.connect(BodyRPCStore, 'bodyRPC'),
         Reflux.connect(PlanetStore, 'planet'),
         Reflux.connect(MenuStore, 'menuVisible')
     ],
-    getInitialState: function() {
-        return {
-            planet: ''
-        };
-    },
-    previousMapMode: '',
-    previousPlanetId: '',
-    render: function() {
+    previousMapMode  : '',
+    previousPlanetId : '',
+    render           : function() {
 
         // console.log(this.state);
 
         // Do nothing if the menu isn't shown.
-        if (this.state.menuVisible === false) {
+        if (this.state.menuVisible.show === false) {
 
             // Reset these values because we're *probably* logged out.
             this.previousMapMode = MapModeStore.PLANET_MAP_MODE;
@@ -48,8 +43,6 @@ var Map = React.createClass({
         // console.log('planet = ' + this.state.planet + '(' + this.previousPlanetId + ')');
 
         var Lacuna = YAHOO.lacuna;
-        var Game = Lacuna.Game;
-
 
         if (
             // Render if the planet id has changed... OR...
@@ -82,7 +75,7 @@ var Map = React.createClass({
             Lacuna.MapPlanet.MapVisible(false);
             Lacuna.MapStar.MapVisible(true);
             Lacuna.MapStar.Load();
-            Lacuna.MapStar.Jump(this.state.body.x, this.state.body.y);
+            Lacuna.MapStar.Jump(this.state.bodyRPC.x, this.state.bodyRPC.y);
 
             // Sadly, we have to pull hacky tricks like this to avoid infinite loops.
             this.previousPlanetId = this.state.planet;

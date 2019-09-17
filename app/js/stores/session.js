@@ -1,31 +1,37 @@
 'use strict';
 
-var Reflux = require('reflux');
+var Reflux              = require('reflux');
 
-var SessionActions = require('js/actions/session');
+var SessionActions      = require('js/actions/session');
+var EmpireRPCActions    = require('js/actions/rpc/empire');
+
+var StatefulStore       = require('js/stores/mixins/stateful');
 
 var SessionStore = Reflux.createStore({
-    listenables: SessionActions,
 
-    init: function() {
-        this.data = this.getInitialState();
-    },
+    listenables : [
+        SessionActions,
+        EmpireRPCActions
+    ],
 
-    getInitialState: function() {
+    mixins : [
+        StatefulStore
+    ],
+
+    getDefaultData : function() {
         return '';
     },
 
-    getData: function() {
-        return this.data;
+    onSessionSet : function(session) {
+        this.emit(session);
     },
 
-    onSet: function(session) {
-        this.data = session;
-        this.trigger(this.data);
+    onSessionClear : function() {
+        this.emit(this.getDefaultData());
     },
 
-    onClear: function() {
-        this.trigger(this.getInitialState());
+    onSuccessEmpireRPCLogout : function() {
+        this.emit(this.getDefaultData());
     }
 });
 

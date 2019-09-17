@@ -1,22 +1,22 @@
 'use strict';
 
-var Reflux = require('reflux');
+// TODO Should we be using 'storable'?
 
-var NotesActions = require('js/actions/window/notes');
-var MapActions = require('js/actions/menu/map');
+var Reflux              = require('reflux');
 
-var BodyRPCStore = require('js/stores/rpc/body');
-var NotesWindowStore = require('js/stores/window/notes');
+var NotesWindowActions  = require('js/actions/windows/notes');
+var MapMenuActions      = require('js/actions/menu/map');
 
-var server = require('js/server');
+var BodyRPCStore        = require('js/stores/rpc/body');
+var NotesWindowStore    = require('js/stores/windows/notes');
 
-var NotesDataStore = Reflux.createStore({
-    listenables: [
-        NotesActions,
-        MapActions
+var NotesBodyRPCStore = Reflux.createStore({
+    listenables : [
+        NotesWindowActions,
+        MapMenuActions
     ],
 
-    init: function() {
+    init : function() {
         // Use this to store the notes before they get saved.
         this.data = '';
 
@@ -27,61 +27,45 @@ var NotesDataStore = Reflux.createStore({
                 // We changed planet. The save automagically happened below.
                 // We just need to bring the new data in.
                 this.planetId = body.id;
-                NotesActions.set(body.notes);
+                this.onNotesSet(body.notes);
             }
         }, this);
     },
 
-    getInitialState: function() {
+    getInitialState : function() {
         this.data = 'Write some notes here.';
         return this.data;
     },
 
-    onShow: function() {
-        NotesActions.load();
+    onNotesShow : function() {
+        this.onNotesLoad();
     },
 
-    onHide: function() {
-        NotesActions.clear();
+    onNotesHide : function() {
+        this.onNotesClear();
     },
 
-    onLoad: function() {
+    onNotesLoad : function() {
         var data = BodyRPCStore.getData();
         this.planetId = data.id;
         this.trigger(data.notes);
     },
 
-    onClear: function() {
+    onNotesClear : function() {
         this.trigger(this.getInitialState());
     },
 
-    onSet: function(value) {
+    onNotesSet : function(value) {
         this.data = value;
         this.trigger(this.data);
     },
 
-    onSave: function() {
-        server.call({
-            module: 'body',
-            method: 'set_colony_notes',
-            trigger: false,
-            params: [
-                this.planetId,
-                {
-                    notes: this.data
-                }
-            ],
-            scope: this
-        });
-    },
-
-    onChangePlanet: function() {
+    onMapChangePlanet : function() {
         // Only do this while the window is open.
         if (NotesWindowStore.getData()) {
-            NotesActions.save();
-            NotesActions.clear();
+            this.onNotesClear();
         }
     }
 });
 
-module.exports = NotesDataStore;
+module.exports = NotesBodyRPCStore;

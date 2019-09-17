@@ -1,107 +1,71 @@
 'use strict';
 
-var browserifyInc = require('browserify-incremental');
-var debowerify = require('debowerify');
-var reactify = require('reactify');
-var source = require('vinyl-source-stream');
-
-var cssConcat = require('gulp-concat-css');
-var cssMin = require('gulp-minify-css');
-var gulp = require('gulp');
-var rename = require('gulp-rename');
-var uglify = require('gulp-uglify');
-
-var path = require('path');
-
-var express = require('express');
-var del = require('del');
-
-gulp.task('dev', ['browserify', 'cssify', 'serve'], function() {
-
-    var watcher = gulp.watch('./app/**/*', ['browserify', 'cssify']);
-
-    watcher.on('ready', function() {
-        console.log('Watching for changes.');
-    });
-
-    watcher.on('change', function(event) {
-        console.log('File ' + event.path + ' was ' + event.type + ', running tasks.');
-    });
-
-    return watcher;
-});
+var gulp        = require('gulp');
+var gulpTasks   = require('./gulp-tasks');
+var runSequence = require('run-sequence');
 
 gulp.task('browserify', function() {
-    var b = browserifyInc(['./app/js/load.js'], {
-        extensions: ['.jsx'],
-        paths: [path.join(__dirname, 'app')],
-        cachefile: path.join(__dirname, 'browserify-cache.json')
-    });
-
-    // This transforms all the .jsx files into JavaScript.
-    b.transform(reactify);
-
-    // This brings Bower-installed libraries into the bundle.
-    b.transform(debowerify);
-
-    var stream = b
-        .bundle()
-        .pipe(source('load.js'))
-        .pipe(gulp.dest('./lacuna'));
-
-    return stream;
-});
-
-gulp.task('cssify', ['browserify'], function() {
-    var stream = gulp.src('app/css/styles.css')
-        .pipe(cssConcat(''))
-        .pipe(gulp.dest('lacuna/styles.css'));
-
-    return stream;
-});
-
-gulp.task('minify-js', ['browserify', 'cssify'], function() {
-    var stream =  gulp.src('./lacuna/load.js')
-        .pipe(uglify())
-        .pipe(rename({
-            extname: '.min.js'
-        }))
-        .pipe(gulp.dest('./lacuna'));
-
-    return stream;
-});
-
-gulp.task('minify-css', ['browserify', 'cssify', 'minify-js'], function() {
-    var stream = gulp.src('./lacuna/styles.css')
-    .pipe(cssMin())
-    .pipe(rename({
-        extname: '.min.css'
-    }))
-    .pipe(gulp.dest('./lacuna'));
-
-    return stream;
-});
-
-gulp.task('serve', ['browserify', 'cssify'], function(done) {
-    var app = express();
-    var port = process.env.PORT || 8080;
-    app.use(express.static(path.join(__dirname)));
-
-    app.listen(port, function() {
-      console.log('Listening on http://192.168.0.37:' + port + ' for requests.');
-      done();
+    return gulpTasks.browserify({
+        rootDir : __dirname,
+        watch   : true
     });
 });
 
-gulp.task('clean', function() {
-    var files = [
-        'browserify-cache.json',
-        'lacuna/*.js',
-        'lacuna/*.css'
-    ];
-
-    del.sync(files);
+gulp.task('browserify-no-watch', function() {
+    return gulpTasks.browserify({
+        rootDir : __dirname,
+        watch   : false
+    });
 });
 
-// The default task is a build of everything.
-gulp.task('default', ['browserify', 'cssify', 'minify-js', 'minify-css']);
+gulp.task('build', function(done) {
+    runSequence(
+        'lint',
+        'browserify-no-watch',
+        'cssify',
+    done);
+});
+
+gulp.task('build-no-lint', function(done) {
+    runSequence(
+        'browserify-no-watch',
+        'cssify',
+    done);
+});
+
+gulp.task('clean', gulpTasks.clean);
+
+gulp.task('cssify', gulpTasks.cssify);
+
+gulp.task('default', [
+    'build'
+]);
+
+gulp.task('dev', function(done) {
+    runSequence(
+        'cssify',
+        'browserify',
+    done);
+});
+
+gulp.task('dev-with-server', function(done) {
+    runSequence(
+        'cssify',
+        'browserify',
+        'server',
+    done);
+});
+
+gulp.task('lint', gulpTasks.lint);
+
+gulp.task('server', gulpTasks.server);
+
+gulp.task('deploy-copy-files', gulpTasks.deploy.copyFiles);
+gulp.task('deploy-push-to-github', gulpTasks.deploy.pushToGithub);
+
+gulp.task('deploy', function() {
+    runSequence(
+        'deploy-copy-files',
+        'deploy-push-to-github'
+    );
+});
