@@ -84,7 +84,7 @@ gulp.task('minify-css', ['browserify', 'cssify', 'minify-js'], function() {
 gulp.task('serve', ['browserify', 'cssify'], function(done) {
     var app = express();
     var port = process.env.PORT || 8080;
-    app.use('/lacuna', express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname)));
 
     app.listen(port, function() {
       console.log('Listening on http://localhost:' + port + ' for requests.');
