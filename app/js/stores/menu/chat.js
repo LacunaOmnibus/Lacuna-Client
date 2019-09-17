@@ -1,18 +1,30 @@
 'use strict';
 
-var Reflux = require('reflux');
+var Reflux      = require('reflux');
 
 var ChatActions = require('js/actions/menu/chat');
 
-var ChatStore = Reflux.createStore({
-    listenables: ChatActions,
+var StatefulStore = require('js/stores/mixins/stateful');
 
-    onShow: function() {
-        this.trigger(true);
+var ChatStore = Reflux.createStore({
+    listenables : [
+        ChatActions
+    ],
+
+    mixins : [
+        StatefulStore
+    ],
+
+    getDefaultData : function() {
+        return false;
     },
 
-    onHide: function() {
-        this.trigger(false);
+    onShow : function() {
+        this.emit(true);
+    },
+
+    onHide : function() {
+        this.emit(false);
     }
 });
 

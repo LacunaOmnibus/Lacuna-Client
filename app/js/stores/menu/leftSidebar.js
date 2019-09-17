@@ -1,25 +1,32 @@
 'use strict';
 
-var Reflux = require('reflux');
-var $ = require('js/shims/jquery');
+var Reflux             = require('reflux');
 
 var LeftSidebarActions = require('js/actions/menu/leftSidebar');
 
-var LeftSidebarStore = Reflux.createStore({
-    listenables: LeftSidebarActions,
+var StatefulStore      = require('js/stores/mixins/stateful');
 
-    getInitialState: function() {
+var LeftSidebarStore = Reflux.createStore({
+    listenables : [
+        LeftSidebarActions
+    ],
+
+    mixins : [
+        StatefulStore
+    ],
+
+    getDefaultData : function() {
         return false;
     },
 
-    onShow: function() {
+    onShow : function() {
         console.log('Showing left sidebar');
-        this.trigger(true);
+        this.emit(true);
     },
 
-    onHide: function() {
+    onHide : function() {
         console.log('Hiding left sidebar');
-        this.trigger(false);
+        this.emit(false);
     }
 });
 

@@ -1,24 +1,25 @@
 'use strict';
 
-var Reflux = require('reflux');
+var Reflux          = require('reflux');
+var _               = require('lodash');
+var StatefulStore   = require('js/stores/mixins/stateful');
 
-var AboutActions = require('js/actions/window/about');
+var AboutActions    = require('js/actions/windows/about');
 
-var server = require('js/server');
+var server          = require('js/server');
 
 var CreditsRPCStore = Reflux.createStore({
-    listenables: AboutActions,
 
-    init: function() {
-        this.data = this.getInitialState();
-    },
+    listenables : [
+        AboutActions
+    ],
 
-    getInitialState: function() {
+    mixins : [
+        StatefulStore
+    ],
+
+    getDefaultData : function() {
         return {};
-    },
-
-    hasData: function() {
-        return _.keys(this.data).length > 0;
     },
 
     // INPUT:
@@ -38,38 +39,31 @@ var CreditsRPCStore = Reflux.createStore({
     //     'Play Testers' : ['John Ottinger', 'Jamie Vrbsky']
     // }
 
-    handleResult: function(result) {
-        var newResult = {};
+    handleNewCredits : function(result) {
+        var credits = {};
 
         _.each(result, function(foo) {
             _.each(foo, function(names, header) {
-                newResult[header] = names;
+                credits[header] = names;
             });
         });
 
-        return newResult;
+        this.emit(credits);
     },
 
-    onShow: function() {
-        AboutActions.load();
-    },
-
-    onLoad: function() {
+    onLoad : function() {
         // The credits change very rarely so don't waste RPC's on them.
-        if (this.hasData()) {
+        if (_.keys(this.state).length > 0) {
             return;
         }
 
         server.call({
-            module: 'stats',
-            method: 'credits',
-            params: [],
-            addSession: false,
-            scope: this,
-            success: function(result) {
-                this.data = this.handleResult(result);
-                this.trigger(this.data);
-            }
+            module     : 'stats',
+            method     : 'credits',
+            params     : [],
+            addSession : false,
+            scope      : this,
+            success    : this.handleNewCredits
         });
     }
 });
