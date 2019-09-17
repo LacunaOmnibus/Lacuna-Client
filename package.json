@@ -57,6 +57,7 @@
     "express": "4.13.4",
     "gulp": "3.9.1",
     "gulp-concat-css": "2.3.0",
+      "gulp-minify-css": "1.1.1",
     "gulp-gh-pages": "0.5.4",
     "gulp-util": "3.0.7",
     "run-sequence": "1.2.1",
