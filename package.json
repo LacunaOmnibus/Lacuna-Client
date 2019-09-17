@@ -64,7 +64,7 @@
     "gulp-uglify": "1.2.0",
     "gulp-gh-pages": "0.5.4",
     "gulp-util": "3.0.7",
-    "pnotify": "sciactive/pnotify",
+    "pnotify": "git://github.com/sciactive/pnotify",
     "run-sequence": "1.2.1",
     "vinyl-source-stream": "1.1.0",
     "watchify": "3.7.0"
