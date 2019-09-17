@@ -16,22 +16,7 @@ var path = require('path');
 var express = require('express');
 var del = require('del');
 
-gulp.task('dev', ['browserify', 'cssify'], function() {
-
-    var watcher = gulp.watch('./app/**/*', ['browserify', 'cssify']);
-
-    watcher.on('ready', function() {
-        console.log('Watching for changes.');
-    });
-
-    watcher.on('change', function(event) {
-        console.log('File ' + event.path + ' was ' + event.type + ', running tasks.');
-    });
-
-    return watcher;
-});
-
-gulp.task('dev-with-server', ['browserify', 'cssify', 'serve'], function() {
+gulp.task('dev', ['browserify', 'cssify', 'serve'], function() {
 
     var watcher = gulp.watch('./app/**/*', ['browserify', 'cssify']);
 
@@ -103,7 +88,7 @@ gulp.task('serve', ['browserify', 'cssify'], function(done) {
     app.use(express.static(path.join(__dirname)));
 
     app.listen(port, function() {
-      console.log('Listening on http://localhost:' + port + ' for requests.');
+      console.log('Listening on http://192.168.0.37:' + port + ' for requests.');
       done();
     });
 });

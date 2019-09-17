@@ -3,7 +3,9 @@
 var Reflux = require('reflux');
 
 var EssentiaActions = Reflux.createActions([
-    'loadBoosts',
+    'load',
+    'show',
+    'hide',
     'boost',
     'redeemCode'
 ]);
