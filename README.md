@@ -10,18 +10,205 @@ The files contained herein are the front end code that make up the game called "
 
 # Hacking
 
-Lacuna-Web-Client requires [Nodejs](https://nodejs.org) to hack on. For
-installing, see [their wiki](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
+Lacuna-Web-Client requires [Node.js](https://nodejs.org) to hack on. For
+installing, see [their installation guide](https://github.com/joyent/node/wiki/Installation).
 
-Setup of this client should look something like this:
+Setting up and running everything should look something like this:
 
 ```bash
-git clone https://github.com/plainblack/Lacuna-Web-Client
+git clone https://github.com/<your-username>/Lacuna-Web-Client
 cd Lacuna-Web-Client
-npm install gulp -g # installs the build tool, gulp. This should be a once-off.
-npm install # installs the dependencies: jquery, express, etc..
-gulp dev # compiles js/css and launches dev server.
+
+# These should be on-offs. These commands install gulp and bower into the
+# global namespace so they can be used on the command line.
+#
+# Gulp is a task runner; it handles building and running the code.
+# Bower is a package manager; it handles downloading JS modules that can't
+# be downloaded off of npm like everythinge else should.
+npm install gulp -g
+npm install bower -g
+
+# Installs the dependencies for building and running the code.
+# This should be done every time `package.son` file changes.
+npm install
+
+# Compiles js/css and launches dev server.
+gulp dev
 ```
+
+# Development
+
+The following are some notes and conventions about the changes that are happening here. The client is slowly being transitioned over to some new libraries and a new structure. They are as follows:
+
+- [Semantic UI](https://semantic-ui.com)
+    - This is the CSS framework that makes everything look pretty.
+    - Semantic UI also has a JavaScript component that is jQuery-based.
+- [React](https://facebook.github.io/react/)
+    - React is described as the V in MVC. It's only responsible for managing what the page looks like.
+- [Reflux](https://github.com/spoike/refluxjs#refluxjs)
+    - Reflux is an implementation of Facebook's Flux structure which is used in conjunction with React.
+- [Lodash](https://lodash.com/docs)
+    - Lodash is just a general purpose utility library.
+- [Gulp](https://gulpjs.com/)
+    - Gulp is the build tool. Think of it like `make` or `ant`.
+- [Browserify](https://browserify.org/)
+    - Browserify is the tool that gets all the dependencies and all the files in the project and smashes it all together into one file.
+
+## Conventions
+
+### Actions
+
+See [Actions](https://github.com/spoike/refluxjs#creating-actions).
+
+There are several ways to define a set of actions. In this project, the following is used:
+
+```javascript
+var Reflux = require('reflux');
+
+var StatusActions = Reflux.createActions([
+    'foo',
+    'bar',
+    'baz'
+]);
+```
+
+### Stores
+
+See [Stores](https://github.com/spoike/refluxjs#creating-data-stores).
+
+There are several ways to define a stores and listen to actions. In this project, the following is used:
+
+```javascript
+var Reflux = require('reflux');
+
+var StatusStore = Reflux.createStore({
+    listenables: SomeActions, // See above
+
+    getInitialState: function() {
+        return '';
+    },
+
+    onFoo: function() {
+        this.trigger('Foo was clicked.');
+    },
+
+    onBar: function() {
+        this.trigger('Bar was clicked.');
+    },
+
+    onBaz: function() {
+        this.trigger('Baz was clicked');
+    }
+});
+```
+
+### Components
+
+See [React Components](https://github.com/spoike/refluxjs#react-component-example).
+
+There are several ways to define React Components. In this project, the following is used:
+
+```javascript
+var React = require('react');
+var Reflux = require('reflux');
+
+var Demo = React.createClass({
+    mixins: [
+        Reflux.connect(StatusStore, 'status')
+    ]
+    render: function() {
+        return (
+            <div>
+                <button type="button" onClick={StatusActions.foo}>Foo</button>
+                <button type="button" onClick={StatusActions.bar}>Bar</button>
+                <button type="button" onClick={StatusActions.baz}>Baz</button>
+                <br />
+                <p>
+                    {this.state.status}
+                </p>
+            </div>
+        );
+    }
+})
+```
+
+### Windows
+
+Every single window in the game (Stats or Mail, for example) need several things. We'll use the "About" window as an example.
+
+### Actions
+
+AboutActions: `app/js/actions/window/about.js`
+
+All interactions (show, hide, load) are called from here. This is pretty simple.
+
+### Stores
+
+Each window should have both of these stores (or more, depending on the data the window needs from the server).
+
+AboutWindowStore: `app/js/stores/window/about.js`
+
+This store is simply for storing a Boolean value which indicates weather the window should be shown or not.
+
+CreditsRPCStore: `app/js/stores/rpc/stats/credits.js`
+
+This store is responsible for storing the data that comes from the server. It's then used by the component to show interesting things to the user.
+
+### Components
+
+AboutWindow: `app/js/components/window/about.jsx`
+
+There's nothing fancy here. It's just a React component that uses some data.
+
+### Server Calls
+
+I've implemented a new module for sending requests to the game. It's usage and documentation is below.
+
+```javascript
+var Reflux = require('reflux');
+
+var server = require('js/server');
+
+var SomeStore = Reflux.createStore({
+
+    // NOTE: store setup not shown for simplicity.
+
+    onSomeAction: function() {
+
+        server.call({
+
+            // Self-explanitory
+            module: 'stats',
+
+            // Self-explanitory
+            method: 'credits',
+
+            // Self-explanitory
+            params: [],
+
+            // This option determines weather the session id should be auto-magically added into the
+            // params. It's default is `true` so it should almost never be needed.
+            addSession: false,
+
+            // This function gets called when a request succeeds and is passed the resulting data.
+            // In the case of a store, unless you want to modify the data, simply give it
+            // `this.trigger` and send the data on its merry way to the component.
+            success: this.trigger,
+
+            // Errors are shown to the user every time they occur. Therefore, this callback is only
+            // required for component-specific error handling or whatever.
+            error: function() {
+                // Perform magic tricks here.
+            }
+        });
+    }
+});
+```
+
+
+## Extra Notes
+
+- Do **not** `require('jquery')`! Instead `require('js/shims/jquery')`. `js/shims/jquery` is used to attach the jQuery plugins we use to the one jQuery object.
 
 # Gulp Tasks
 
@@ -31,17 +218,13 @@ In this project, Gulp is used to manage building the code. All the tasks that ca
 
 > `gulp build`
 
-Runs the entire process of pulling all the JavaScript/CSS together and creates minified versions of them. This is also the default task, meaning that running just `gulp` in the command line will run this task.
-
-> `PRODUCTION=1 gulp build`
-
-This does the same as above but it prepares the code itself for *production*. For example, there are a few development-only bits that get removed in this process. A deploy on a production server would **need** to do this or the client won't load properly.
+Runs the entire process of pulling all the JavaScript/CSS together and creates minified versions of them. This is the default task, meaning that running just `gulp` in the command line will run this task.
 
 ## dev
 
 > `gulp dev`
 
-This puts all the JavaScript and CSS together and starts a web server for run the web client. Open up a browser to the [US1 mirror page](http://us1.lacunaexpanse.com/local.html) and you should see the it working.
+This puts all the JavaScript and CSS together and starts a web server to run the web client. Open up a browser to the [US1 mirror page](http://us1.lacunaexpanse.com/local.html) and you should see the it working. It also watches for changes to the code and restarts when it sees anything changed.
 
 ## serve
 
@@ -49,29 +232,8 @@ This puts all the JavaScript and CSS together and starts a web server for run th
 
 This just runs the server for running the client in a browser.
 
-# Keno Antigen
+## clear
 
-> Web client for the open source game Keno Antigen.
+> `gulp clear`
 
-[![Build Status](https://travis-ci.org/Kantigen/ka-web.svg?branch=master)](https://travis-ci.org/Kantigen/ka-web)
-[![Code Climate](https://codeclimate.com/github/Kantigen/ka-web/badges/gpa.svg)](https://codeclimate.com/github/Kantigen/ka-web)
-[![Dependency Status](https://david-dm.org/Kantigen/ka-web.svg)](https://david-dm.org/Kantigen/ka-web)
-[![devDependency Status](https://david-dm.org/Kantigen/ka-web/dev-status.svg)](https://david-dm.org/Kantigen/ka-web#info=devDependencies)
-
-# Ideas
-
-Got an idea? [Let us know!](https://github.com/Kantigen/ka-web/issues)
-
-[![Yoda and feature requests](docs/img/feature-request.jpg)](https://github.com/Kantigen/ka-web/issues)
-
-# Hacking
-
-If you're interested in hacking on the client, hit up the [developer's documentation](docs/README.md).
-
-# License
-
-See the [license file](LICENSE).
-
-# C#
-- https://github.com/communityus-mono/Epacsenur
-- https://github.com/communityus/communityus.github.io/blob/master/TLE/subs
+This deletes temporary files and files from the build.
