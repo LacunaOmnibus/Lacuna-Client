@@ -3,9 +3,8 @@
     "",
     "\\app",
     "\\app\\css",
-    "\\app\\js",
-    "\\public"
+    "\\app\\js"
   ],
-  "SelectedNode": "\\public\\load.min.js",
+  "SelectedNode": "\\app\\js\\smd.js",
   "PreviewInSolutionExplorer": false
 }
