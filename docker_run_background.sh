@@ -5,4 +5,5 @@ docker run -d -p ${TLE_CLIENT_LISTEN:-0.0.0.0}:${TLE_CLIENT_PORT:-8080}:80  \
     -v ${PWD}/lacuna/assets:/src/lacuna/assets \
     --name=tle-client \
     -e DEBUG=express:* \
-    lacuna/tle-client /bin/bash
+    lacuna/tle-client gulp dev-with-server
+
