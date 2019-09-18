@@ -1,8 +1,6 @@
-docker run -d -p ${TLE_CLIENT_LISTEN:-0.0.0.0}:${TLE_CLIENT_PORT:-8080}:80  \
+docker run --rm -it --name=tle-client  \
     -v ${PWD}/app:/src/app \
     -v ${PWD}/gulp-tasks:/src/gulp-tasks \
-    -v ${PWD}/index.html:/src/index.html \
-    -v ${PWD}/lacuna/assets:/src/lacuna/assets \
-    --name=tle-client \
-    -e DEBUG=express:* \
+    -v ${PWD}/index.html.docker:/src/index.html \
+    -v ${PWD}/assets:/src/lacuna/assets \
     lacuna/tle-client /bin/bash
