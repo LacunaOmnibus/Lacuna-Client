@@ -35,20 +35,16 @@ var BoostsRPCStore = Reflux.createStore({
     },
 
     getInitialState: function() {
-        if (this.data) {
-            return this.data;
-        } else {
-            return {
-                food: {ms: 0, display: ''},
-                ore: {ms: 0, display: ''},
-                water: {ms: 0, display: ''},
-                energy: {ms: 0, display: ''},
-                happiness: {ms: 0, display: ''},
-                storage: {ms: 0, display: ''},
-                building: {ms: 0, display: ''},
-                spy_training: {ms: 0, display: ''}
-            };
-        }
+        return {
+            food: {ms: 0, display: ''},
+            ore: {ms: 0, display: ''},
+            water: {ms: 0, display: ''},
+            energy: {ms: 0, display: ''},
+            happiness: {ms: 0, display: ''},
+            storage: {ms: 0, display: ''},
+            building: {ms: 0, display: ''},
+            spy_training: {ms: 0, display: ''}
+        };
     },
 
     addNewBoost: function(timestamp, boostName) {
@@ -68,7 +64,7 @@ var BoostsRPCStore = Reflux.createStore({
         this.trigger(this.data);
     },
 
-    onLoadBoosts: function() {
+    onShow: function() {
         server.call({
             module: 'empire',
             method: 'view_boosts',

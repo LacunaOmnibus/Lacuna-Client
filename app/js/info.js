@@ -1,5 +1,7 @@
 YAHOO.namespace("lacuna");
 
+var ServerClockActions = require('js/actions/window/serverClock');
+
 var _ = require('lodash');
 
 
