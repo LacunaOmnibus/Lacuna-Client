@@ -50,9 +50,6 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
                 '        <span id="shipDocksAvailable" style="float:left;"></span>',
                 '        <span style="float:right;"><select id="shipBuildView"><option value="All">All</option><option value="Now" selected="selected">Now</option><option value="Later">Later</option></select></span>',
                 '    </div>',
-                '    <div class="clearafter" style="font-weight:bold;">',
-                '        <span style="float:left;">Shipyards to use: <select id="shipBuildYards"><option value="">Only this shipyard</option><option value="all" selected="selected">All shipyards</option><option value="higher">This and higher level</option><option value="only">Same level only</option></select></span>',
-                '    </div>',
                 '    <div id="shipBuildMessage" class="error"></div>',
                 '    <div id="bHt" style="overflow:auto;margin-top:2px;border-top:1px solid #52acff;">',
                 '        <ul id="shipDetails">',
@@ -337,15 +334,11 @@ if (typeof YAHOO.lacuna.buildings.Shipyard == "undefined" || !YAHOO.lacuna.build
             btn.disabled = true;
             Lacuna.Pulser.Show();
             var qty = Dom.get("ship_"+this.Type);
-            var use = Lib.getSelectedOptionValue("shipBuildYards");
-            this.Self.service.build_ships({
+            this.Self.service.build_ship({
                 session_id:Game.GetSession(),
-                options: {
-                    building_id:this.Self.building.id,
-                    type:this.Type,
-                    quantity:qty.value,
-                    autoselect:use
-                }
+                building_id:this.Self.building.id,
+                type:this.Type,
+                quantity:qty.value
             }, {
                 success : function(o){
                     btn.disabled = false;
